@@ -1,0 +1,28 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.venv/
+venv/
+build/
+dist/
+
+# Large/local research inputs and generated models
+Dataset/
+artifacts/
+
+# GeoNormPy is maintained in its own repository
+GeoNormPy/
+
+# Local report extraction and office lock files
+tmp_*
+~$*
+
+# OS/editor files
+desktop.ini
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

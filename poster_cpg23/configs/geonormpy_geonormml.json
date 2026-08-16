@@ -1,0 +1,100 @@
+{
+  "short_title": "GeoNormPy + GeoNormML | ecosistema reproducible para petrología ígnea",
+  "title": "GeoNormPy y GeoNormML: cálculo CIPW reproducible y clasificación supervisada de rocas ígneas del Perú",
+  "authors": "Jordan Zavaleta",
+  "affiliation": "Escuela Profesional de Ingeniería Geológica, Universidad Nacional de Ingeniería, Lima, Perú",
+  "slides": [
+    {
+      "kind": "title",
+      "body": "Suite abierta y reproducible para transformar óxidos mayores en mineralogía normativa CIPW y apoyar la denominación litológica. GeoNormPy ya está desplegado en PyPI: pip install geonormpy.",
+      "caption": "Arquitectura general GeoNormPy–GeoNormML",
+      "visual": "docs/diagrama.jpg"
+    },
+    {
+      "kind": "context",
+      "heading": "PROBLEMA Y OBJETIVO",
+      "body": "La denominación de rocas ígneas requiere integrar geoquímica de roca total, mineralogía normativa y criterio petrológico. El objetivo fue construir un flujo auditable, reproducible y transferible en Python.",
+      "bullets": [
+        "Sustituir etapas dispersas y manuales por un pipeline reproducible.",
+        "Separar control de calidad de las variables predictivas.",
+        "Seleccionar modelos por dominio litológico y coherencia petrológica."
+      ],
+      "caption": "Distribución geográfica del dataset depurado",
+      "visual": "docs/dataset filtrado.jpg"
+    },
+    {
+      "kind": "method",
+      "heading": "METODOLOGÍA: DE ÓXIDOS A DECISIÓN",
+      "body": "El rigor metodológico se sustenta en una cadena trazable, desde la curación hasta la comparación de modelos mediante validación cruzada estratificada de cinco pliegues.",
+      "steps": ["Curación\nlitogeoquímica", "GeoNormPy\nCIPW", "GeoNormML\nbenchmarking", "Modelo\ntransferible"],
+      "caption": "Diagrama de flujo documentado del ecosistema",
+      "visual": "docs/diagrama.jpg"
+    },
+    {
+      "kind": "method",
+      "heading": "DISEÑO EXPERIMENTAL Y TRAZABILIDAD",
+      "body": "Dataset final: 2 755 muestras y 19 clases. Volcánicas: 1 764 muestras / 9 clases. Plutónicas: 991 muestras / 10 clases. Se evaluaron Random Forest, XGBoost y SVM con PCA.",
+      "steps": ["oxides_core\nóxidos mayores", "cipw\nminerales normativos", "combined_core\nóxidos + CIPW", "Métricas\nCA · AUC · F1 · MCC"],
+      "caption": "Cobertura espacial después de la depuración",
+      "visual": "docs/dataset filtrado.jpg"
+    },
+    {
+      "kind": "results",
+      "heading": "RESULTADOS PRINCIPALES — DOMINIO VOLCÁNICO",
+      "body": "XGBoost con combined_core fue seleccionado por su balance entre desempeño, integración petrológica y el MCC más alto entre los modelos oficiales.",
+      "metrics": [
+        {"value": "0.805", "label": "CA"},
+        {"value": "0.947", "label": "AUC macro"},
+        {"value": "0.713", "label": "MCC"}
+      ],
+      "visuals": [
+        {"path": "artifacts/report_confusion_matrices_2025_context/heatmap_VOL_XGB.png", "caption": "Matriz de confusión: volcánicas / XGBoost"},
+        {"path": "artifacts/ml_benchmark/roc_curves/volcanic__combined_core__XGBoost.png", "caption": "Curvas ROC: volcánicas / XGBoost"}
+      ],
+      "bullets": ["Las mayores confusiones ocurren entre basalto, andesita basáltica y andesita; y entre dacita, riodacita y riolita."]
+    },
+    {
+      "kind": "results",
+      "heading": "RESULTADOS PRINCIPALES — DOMINIO PLUTÓNICO",
+      "body": "Random Forest con oxides_core fue el modelo oficial: incorpora menos complejidad cuando los minerales normativos no mejoran de manera consistente la separación del dominio.",
+      "metrics": [
+        {"value": "0.581", "label": "CA"},
+        {"value": "0.852", "label": "AUC macro"},
+        {"value": "0.482", "label": "MCC"}
+      ],
+      "visuals": [
+        {"path": "artifacts/report_confusion_matrices_2025_context/heatmap_PLU_RF.png", "caption": "Matriz de confusión: plutónicas / Random Forest"},
+        {"path": "artifacts/ml_benchmark/roc_curves/plutonic__oxides_core__RandomForest.png", "caption": "Curvas ROC: plutónicas / Random Forest"}
+      ],
+      "bullets": ["Las confusiones granito–monzogranito–granodiorita–tonalita reflejan campos composicionales superpuestos y la ausencia de información modal directa."]
+    },
+    {
+      "kind": "results",
+      "heading": "APLICABILIDAD: PAQUETE DISPONIBLE Y SALIDA AUDITABLE",
+      "body": "GeoNormPy implementa normalización anhidra, manejo explícito del hierro, saturación en sílice y alúmina, minerales normativos y diagnósticos de balance de masa. Está publicado para instalación directa mediante pip install geonormpy.",
+      "metrics": [
+        {"value": "PyPI", "label": "despliegue"},
+        {"value": "0.1.1", "label": "última versión disponible"},
+        {"value": "CLI", "label": "uso reproducible"}
+      ],
+      "visuals": [
+        {"path": "docs/diagrama.jpg", "caption": "Flujo de salidas reproducibles"},
+        {"path": "docs/dataset filtrado.jpg", "caption": "Dataset regional curado"}
+      ],
+      "bullets": ["La suite no reemplaza el criterio geológico: entrega probabilidades, advertencias y trazabilidad para apoyar la interpretación petrológica."]
+    },
+    {
+      "kind": "conclusions",
+      "heading": "CONCLUSIONES",
+      "bullets": [
+        "GeoNormPy + GeoNormML integran cálculo CIPW, curación y ML en un ecosistema reproducible.",
+        "Las rocas volcánicas presentan mayor separabilidad: XGBoost + combined_core alcanzó CA 0.805 y MCC 0.713.",
+        "Las plutónicas mantienen una limitación petrológica real: Random Forest + oxides_core alcanzó CA 0.581 y MCC 0.482.",
+        "GeoNormPy está listo para uso e instalación desde PyPI: pip install geonormpy.",
+        "La siguiente etapa es validación externa e integración con herramientas de clasificación petrológica digital."
+      ],
+      "caption": "Arquitectura del ecosistema GeoNormPy–GeoNormML",
+      "visual": "docs/diagrama.jpg"
+    }
+  ]
+}

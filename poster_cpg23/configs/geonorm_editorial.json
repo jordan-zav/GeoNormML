@@ -1,0 +1,24 @@
+{
+  "poster": {
+    "event": "XXIII CONGRESO PERUANO DE GEOLOGÍA · PÓSTER CIENTÍFICO",
+    "title": "GeoNormPy + GeoNormML\nCIPW reproducible para rocas ígneas",
+    "authors": "Jordan Zavaleta",
+    "affiliation": "Escuela Profesional de Ingeniería Geológica · Universidad Nacional de Ingeniería · Lima, Perú",
+    "hero_visual": "docs/dataset filtrado.jpg",
+    "hero_metrics": [{"value":"2 755","label":"muestras"},{"value":"19","label":"clases"},{"value":"PyPI","label":"desplegado"}],
+    "intro": "GeoNormPy calcula CIPW. GeoNormML selecciona modelos por dominio litológico. Juntos convierten óxidos, minerales normativos y ML en un flujo abierto, trazable y auditable.",
+    "method_steps": ["Curación", "CIPW", "Benchmark", "Modelo final"],
+    "method_note": "QA/QC separado · CV estratificada 5-fold · Random Forest · XGBoost · SVM + PCA",
+    "results_intro": "La selección no privilegia una métrica aislada: combina desempeño, estabilidad, disponibilidad de variables y coherencia petrológica.",
+    "results": [
+      {"domain":"VOLCÁNICAS · XGBOOST", "metrics":[{"value":"0.805","label":"CA"},{"value":"0.947","label":"AUC macro"},{"value":"0.713","label":"MCC"}], "visual":"artifacts/report_confusion_matrices_2025_context/heatmap_VOL_XGB.png", "finding":"Mayor separabilidad química.", "caption":"Matriz de confusión · 1 764 muestras · 9 clases"},
+      {"domain":"PLUTÓNICAS · RANDOM FOREST", "metrics":[{"value":"0.581","label":"CA"},{"value":"0.852","label":"AUC macro"},{"value":"0.482","label":"MCC"}], "visual":"artifacts/report_confusion_matrices_2025_context/heatmap_PLU_RF.png", "finding":"El QAPF modal sigue siendo crítico.", "caption":"Matriz de confusión · 991 muestras · 10 clases"}
+    ],
+    "deploy": "Aprobado y disponible en PyPI\npip install geonormpy",
+    "conclusions": ["CIPW, QA y ML reproducibles.", "Apoya el criterio geológico.", "Trazabilidad transferible."],
+    "closing_title": "De composición a interpretación",
+    "closing_text": "CIPW con hierro, saturación, alúmina y balance de masa. Modelos defendibles para cada dominio.",
+    "contact": "Código abierto · github.com/jordan-zav/GeoNormPy",
+    "footer": "GeoNormPy + GeoNormML · Ecosistema reproducible para la clasificación de rocas ígneas del Perú"
+  }
+}
