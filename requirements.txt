@@ -1,4 +1,4 @@
--e ./GeoNormPy
+-e ../GeoNormPy
 pandas>=1.5
 openpyxl>=3.1
 numpy>=1.24

@@ -86,6 +86,19 @@ python -m pip install -e .\GeoNormML
 The reusable package can then be imported as `geonormml`. Full pipeline runs
 also require the private local datasets referenced by the project scripts.
 
+When using `requirements.txt`, run `python -m pip install -r requirements.txt`
+from the GeoNormML directory. It resolves GeoNormPy from `../GeoNormPy`, matching
+the sibling layout above.
+
+### Clean working copy
+
+Keep source code, scientific documentation and conference materials in this
+repository. Keep `Dataset/`, generated `artifacts/`, virtual environments,
+caches, temporary reports and local credentials outside version control.
+GeoNormPy remains a separate sibling repository. Existing local training
+datasets and exports are not needed to build the Python package; they are
+required to run the corresponding research stages.
+
 ## Pipeline entry points
 
 | Script | Purpose |

@@ -70,7 +70,7 @@ def geonormpy_test_score() -> tuple[float, int, int]:
     """Ejecuta pytest y devuelve proporcion aprobada, aprobadas y total."""
     result = subprocess.run(
         [sys.executable, "-m", "pytest", "-q"],
-        cwd=PROJECT_ROOT / "GeoNormPy",
+        cwd=PROJECT_ROOT.parent / "GeoNormPy",
         capture_output=True,
         text=True,
         check=False,

@@ -26,3 +26,11 @@ desktop.ini
 Thumbs.db
 .idea/
 .vscode/
+
+# Local credentials and runtime output
+.env
+.env.*
+!.env.example
+*.log
+.coverage
+htmlcov/
