@@ -7,7 +7,7 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 DATASET_DIR = PROJECT_ROOT / "Dataset" / "Filtered" / "final"
-CLEAN_DATASET = DATASET_DIR / "GeoNormML_training_clean.xlsx"
+CLEAN_DATASET = DATASET_DIR / "GeoNormML_training_curated.xlsx"
 SPATIAL_DATASET = DATASET_DIR / "Merge_Filtered_training_ready_v5_spatial.xlsx"
 CONSISTENT_DATASET = DATASET_DIR / "Merge_Filtered_training_ready_v4_consistent.xlsx"
 

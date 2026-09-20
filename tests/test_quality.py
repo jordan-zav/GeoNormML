@@ -57,34 +57,47 @@ def test_conflicting_duplicate_ids_fail_without_arbitrary_choice(samples):
         collapse_spatial_matches(pd.concat([samples, repeated]), ["Metal_Belt"])
 
 
-def test_quarantine_keeps_row_accounting_and_missing_loi(samples):
+def test_review_flags_preserve_curated_ids_and_values(samples):
     samples.loc[0, "mass_balance_error"] = 0.2
     samples.loc[1, "SiO2"] = np.nan
     samples.loc[2, "FeOT"] = -1.0
     samples.loc[3, "LOI"] = -0.2
     clean, excluded, report = clean_dataset(samples)
-    assert len(clean) == 5 and len(excluded) == 3
-    assert clean.ID_Final.is_unique
+    assert len(clean) == 8 and excluded.empty
+    assert report["review_rows_retained"] == 3
+    assert report["quarantined_or_duplicate_rows"] == 0
     assert clean.loc[clean.ID_Final.eq(4), "LOI"].iloc[0] == -0.2
-    assert clean.LOI.isna().sum() == 4
-    assert report["input_rows"] == report["clean_rows"] + len(excluded)
+    assert clean.LOI.isna().sum() == 7
 
 
-def test_exact_chemistry_conflicting_labels_is_not_reclassified(samples):
+def test_conflicting_labels_are_retained_for_review(samples):
     samples.loc[1, CORE] = samples.loc[0, CORE]
     samples.loc[1, "ROCK_NAME"] = "basalto"
-    clean, excluded, _ = clean_dataset(samples)
-    assert len(clean) == 6
-    assert set(excluded.QC_Reason) == {"identical_chemistry_conflicting_labels"}
-    assert set(excluded.ROCK_NAME) == {"andesita", "basalto"}
+    clean, excluded, report = clean_dataset(samples)
+    assert len(clean) == 8 and excluded.empty
+    flagged = clean[clean.QC_Review.ne("")]
+    assert set(flagged.QC_Review) == {"identical_chemistry_conflicting_labels"}
+    assert set(flagged.ROCK_NAME) == {"andesita", "basalto"}
+    assert report["review_rows_retained"] == 2
+    assert flagged.Sample_Group.nunique() == 1
 
 
-def test_duplicate_assays_keep_lowest_original_id(samples):
+def test_duplicate_assays_with_distinct_curated_ids_are_retained(samples):
     repeated = samples.iloc[[0]].copy()
     repeated.ID_Final = 20
-    clean, excluded, _ = clean_dataset(pd.concat([repeated, samples], ignore_index=True))
-    assert 1 in clean.ID_Final.values and 20 not in clean.ID_Final.values
-    assert excluded.QC_Reason.tolist() == ["duplicate_analysis"]
+    clean, excluded, report = clean_dataset(pd.concat([repeated, samples], ignore_index=True))
+    assert set(clean.ID_Final) == set(samples.ID_Final) | {20}
+    assert excluded.empty
+    assert clean.loc[clean.ID_Final.eq(20), "QC_Review"].iloc[0] == "duplicate_analysis"
+    assert clean.loc[clean.ID_Final.isin([1, 20]), "Sample_Group"].nunique() == 1
+    assert report["review_rows_retained"] == 1
+
+
+def test_restrictive_filter_requires_explicit_experimental_policy(samples):
+    samples.loc[0, "mass_balance_error"] = 0.2
+    clean, excluded, report = clean_dataset(samples, policy="restricted_experiment")
+    assert len(clean) == 7 and len(excluded) == 1
+    assert report["policy_id"] == "restricted_experiment"
 
 
 def test_replicate_groups_are_transitive(samples):
@@ -120,3 +133,36 @@ def test_pipeline_reuses_only_unmodified_audited_data(samples, tmp_path):
     output.write_bytes(output.read_bytes() + b"changed")
     with pytest.raises(ValueError, match="changed since its audit"):
         ensure_clean_training_dataset(output, tmp_path)
+
+
+def test_pipeline_rejects_old_restrictive_dataset(samples, tmp_path):
+    source = tmp_path / "source.xlsx"
+    samples.to_excel(source, sheet_name="training_ready_final", index=False)
+    restricted = tmp_path / "restricted.xlsx"
+    write_clean_dataset(source, restricted, policy="restricted_experiment")
+    with pytest.raises(ValueError, match="not the curated baseline"):
+        ensure_clean_training_dataset(restricted, tmp_path)
+    from geonormml.data import load_training_dataset
+
+    with pytest.raises(ValueError, match="not the curated baseline"):
+        load_training_dataset(restricted)
+
+
+def test_reference_validation_blocks_unapproved_sample_reduction(samples, tmp_path):
+    source = tmp_path / "source.xlsx"
+    reference = tmp_path / "reference.xlsx"
+    samples.to_excel(reference, sheet_name="training_ready_final", index=False)
+    samples.iloc[1:].to_excel(source, sheet_name="training_ready_final", index=False)
+    output = tmp_path / "curated.xlsx"
+    with pytest.raises(ValueError, match="reference IDs"):
+        write_clean_dataset(source, output, reference=reference)
+    assert not output.exists()
+
+
+def test_reference_validation_records_full_preservation(samples, tmp_path):
+    source = tmp_path / "source.xlsx"
+    samples.to_excel(source, sheet_name="training_ready_final", index=False)
+    output = tmp_path / "curated.xlsx"
+    report = write_clean_dataset(source, output, reference=source)
+    assert report["curated_reference"]["all_ids_and_original_values_preserved"]
+    assert report["curated_reference"]["rows"] == len(samples)

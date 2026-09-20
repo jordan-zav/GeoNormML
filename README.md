@@ -20,9 +20,10 @@ normative mineral features, spatial context and reproducible model evaluation.
 > artifacts are intentionally excluded because they require separate provenance,
 > permissions and storage. The repository alone is not a pretrained classifier.
 
-> The [2026-09-20 code and dataset audit](docs/audit_20260920.md) supersedes earlier
-> sample counts and model scores: spatial joins had duplicated samples. Use the
-> audited clean dataset and grouped validation when reproducing new experiments.
+> The official curated baseline contains **2,755 samples**. The
+> [baseline correction](docs/curated_baseline_correction_20260920.md) supersedes
+> the earlier 2,651-row filtering experiment. Remove spatial join repetitions,
+> preserve every curated sample ID and record additional checks as review warnings.
 
 ## Workflow at a glance
 
@@ -101,15 +102,19 @@ For core ML development without CIPW calculation, install with
 ### Clean data and validate the baseline models
 
 ```powershell
-python -m scripts.clean_dataset --input "<source workbook.xlsx>"
+python -m scripts.clean_dataset --input "<spatial v5.xlsx>" --reference "<curated v4.xlsx>"
 python -m scripts.build_modeling_artifacts
 python -m scripts.validate_models
 python -m scripts.export_official_models
 python -m scripts.generate_shap_plots
 ```
 
-Cleaning creates `Dataset/Filtered/final/GeoNormML_training_clean.xlsx`, a CSV,
-excluded-row audit and SHA-256 manifest. It never overwrites its input or an
+Cleaning creates `Dataset/Filtered/final/GeoNormML_training_curated.xlsx`, a CSV,
+spatial-repeat audit, retained-review table and SHA-256 manifest. It checks the
+reference workbook's IDs and original values before writing. By default no
+curated sample is removed for duplicate chemistry, conflicting labels or CIPW
+balance warnings. `--policy restricted_experiment` requires a separate output
+and cannot be reused as the official pipeline input. Cleaning never overwrites its input or an
 existing output. Set `GEONORMML_DATASET_PATH` to use another audited workbook;
 set `GEONORMML_ARTIFACTS_DIR` to redirect generated artifacts. Export defaults
 to the two geochemical baselines. `--include-spatial` adds experimental spatial

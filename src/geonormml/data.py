@@ -1,11 +1,14 @@
 from __future__ import annotations
 
+import hashlib
+import json
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
 from .config import DATASET_SHEET, get_dataset_path, setup_logging
+from .quality import CURATED_POLICY
 
 logger = setup_logging("geonormml.data")
 
@@ -26,6 +29,15 @@ def load_training_dataset(path=None) -> pd.DataFrame:
         )
 
     logger.info("Loading dataset from %s [sheet=%s]", dataset_path.name, DATASET_SHEET)
+    audit_path = dataset_path.with_suffix(".audit.json")
+    if audit_path.exists():
+        audit = json.loads(audit_path.read_text(encoding="utf-8"))
+        if audit.get("policy_id") != CURATED_POLICY:
+            raise ValueError(
+                "Restricted/legacy dataset is not the curated baseline; use the restored curated workbook."
+            )
+        if audit.get("output_sha256") != hashlib.sha256(dataset_path.read_bytes()).hexdigest():
+            raise ValueError("Dataset no longer matches its audit hash.")
     df = pd.read_excel(dataset_path, sheet_name=DATASET_SHEET)
     validate_training_frame(df)
     logger.info("Loaded %d samples with %d columns.", len(df), len(df.columns))
