@@ -8,7 +8,7 @@ Usage examples::
     # Run the complete pipeline
     python scripts/run_pipeline.py
 
-    # Run only steps 6–8 (artifacts, benchmark, SHAP)
+    # Run only steps 6–8 (artifacts, benchmark, export)
     python scripts/run_pipeline.py --from-step 6 --to-step 8
 
     # Run everything except spatial join
@@ -25,16 +25,25 @@ from __future__ import annotations
 
 import argparse
 import importlib
+import os
 import sys
 import time
 from pathlib import Path
 
-# Ensure the project root is on sys.path so "geonormml" is importable
+# Support both installed packages and execution from a source checkout.
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(_PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(_PROJECT_ROOT))
+sys.path.insert(0, str(_PROJECT_ROOT / "src"))
 
-from geonormml.config import setup_logging  # noqa: E402
+from geonormml.config import (  # noqa: E402
+    CONSISTENT_DATASET,
+    DATASET_DIR,
+    SPATIAL_DATASET,
+    get_dataset_path,
+    setup_logging,
+)
+from geonormml.quality import ensure_clean_training_dataset  # noqa: E402
 
 logger = setup_logging("run_pipeline")
 
@@ -95,16 +104,16 @@ STEPS: list[dict[str, str]] = [
     },
     {
         "num": 8,
-        "name": "generate_shap_plots",
-        "module": "scripts.generate_shap_plots",
-        "desc": "SHAP interpretability plots",
+        "name": "export_official_models",
+        "module": "scripts.export_official_models",
+        "desc": "Export geochemical baselines with provenance",
         "spatial": False,
     },
     {
         "num": 9,
-        "name": "export_official_models",
-        "module": "scripts.export_official_models",
-        "desc": "Export best models as .joblib bundles",
+        "name": "generate_shap_plots",
+        "module": "scripts.generate_shap_plots",
+        "desc": "Explain the exported models with SHAP",
         "spatial": False,
     },
     {
@@ -140,7 +149,10 @@ def print_step_list() -> None:
         tag = " [SPATIAL]" if step["spatial"] else ""
         logger.info(
             "%-4d %-45s %s%s",
-            step["num"], step["name"], step["desc"], tag,
+            step["num"],
+            step["name"],
+            step["desc"],
+            tag,
         )
 
 
@@ -160,6 +172,9 @@ def run_step(step: dict[str, str], dry_run: bool = False) -> bool:
 
     t0 = time.perf_counter()
     try:
+        if num >= 6:
+            clean = ensure_clean_training_dataset(get_dataset_path(), DATASET_DIR)
+            os.environ["GEONORMML_DATASET_PATH"] = str(clean)
         mod = importlib.import_module(step["module"])
         mod.main()
         elapsed = time.perf_counter() - t0
@@ -178,35 +193,50 @@ def main() -> None:
         epilog=__doc__,
     )
     parser.add_argument(
-        "--from-step", type=int, default=1, metavar="N",
+        "--from-step",
+        type=int,
+        default=1,
+        metavar="N",
         help="Start from step N (default: 1)",
     )
     parser.add_argument(
-        "--to-step", type=int, default=len(STEPS), metavar="N",
+        "--to-step",
+        type=int,
+        default=len(STEPS),
+        metavar="N",
         help=f"End at step N (default: {len(STEPS)})",
     )
     parser.add_argument(
-        "--skip-spatial", action="store_true",
+        "--skip-spatial",
+        action="store_true",
         help="Skip spatial join step (step 5) even if in range",
     )
     parser.add_argument(
-        "--dry-run", action="store_true",
+        "--dry-run",
+        action="store_true",
         help="Show steps without executing them",
     )
     parser.add_argument(
-        "--list", action="store_true", dest="list_steps",
+        "--list",
+        action="store_true",
+        dest="list_steps",
         help="List all steps and exit",
     )
     args = parser.parse_args()
+    if not 1 <= args.from_step <= args.to_step <= len(STEPS):
+        parser.error("Step range must satisfy 1 <= from-step <= to-step <= 12.")
+    # Never let a pre-existing spatial/clean workbook silently override fresh v4 data.
+
+    if args.skip_spatial:
+        os.environ["GEONORMML_DATASET_PATH"] = str(CONSISTENT_DATASET)
+    elif args.from_step <= 5 <= args.to_step:
+        os.environ["GEONORMML_DATASET_PATH"] = str(SPATIAL_DATASET)
 
     if args.list_steps:
         print_step_list()
         return
 
-    steps_to_run = [
-        s for s in STEPS
-        if args.from_step <= s["num"] <= args.to_step
-    ]
+    steps_to_run = [s for s in STEPS if args.from_step <= s["num"] <= args.to_step]
 
     if args.skip_spatial:
         steps_to_run = [s for s in steps_to_run if not s["spatial"]]
@@ -218,10 +248,13 @@ def main() -> None:
     mode = "DRY-RUN" if args.dry_run else "EXECUTE"
     logger.info("=" * 70)
     logger.info("  GeoNormML Pipeline — %s MODE", mode)
-    logger.info("  Steps %d → %d (%d steps%s)",
-                steps_to_run[0]["num"], steps_to_run[-1]["num"],
-                len(steps_to_run),
-                ", spatial skipped" if args.skip_spatial else "")
+    logger.info(
+        "  Steps %d → %d (%d steps%s)",
+        steps_to_run[0]["num"],
+        steps_to_run[-1]["num"],
+        len(steps_to_run),
+        ", spatial skipped" if args.skip_spatial else "",
+    )
     logger.info("=" * 70)
 
     t_total = time.perf_counter()
@@ -231,8 +264,9 @@ def main() -> None:
         ok = run_step(step, dry_run=args.dry_run)
         results.append((step["name"], ok))
         if not ok and not args.dry_run:
-            logger.error("Pipeline halted at step %d. Fix the error and re-run with --from-step %d",
-                         step["num"], step["num"])
+            logger.error(
+                "Pipeline halted at step %d. Fix the error and re-run with --from-step %d", step["num"], step["num"]
+            )
             break
 
     elapsed_total = time.perf_counter() - t_total

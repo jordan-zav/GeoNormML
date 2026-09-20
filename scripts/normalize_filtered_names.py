@@ -2,10 +2,8 @@ from __future__ import annotations
 
 import re
 import unicodedata
-from pathlib import Path
 
 import pandas as pd
-
 
 from geonormml.config import PROJECT_ROOT
 
@@ -146,7 +144,6 @@ def normalize_single_label(text: str) -> tuple[str | None, str | None, str | Non
     if raw in TEXTURE_TERMS:
         return TEXTURE_TERMS[raw], None, None
 
-    review_note = None
     sec_name = None
     minerals: list[str] = []
 
@@ -198,8 +195,6 @@ def normalize_single_label(text: str) -> tuple[str | None, str | None, str | Non
         return normalized_main, sec_name, "; ".join(dict.fromkeys(minerals)) if minerals else None
 
     normalized = ROCK_TRANSLATIONS.get(raw, raw)
-    if normalized == raw and raw not in ROCK_TRANSLATIONS.values() and raw not in TEXTURE_TERMS.values():
-        review_note = "unmapped_label"
     return normalized, sec_name, "; ".join(dict.fromkeys(minerals)) if minerals else None
 
 

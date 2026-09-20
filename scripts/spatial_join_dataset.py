@@ -12,7 +12,8 @@ from pathlib import Path
 import geopandas as gpd
 import pandas as pd
 
-from geonormml.config import DATASET_DIR, CONSISTENT_DATASET, DATASET_SHEET, PROJECT_ROOT, setup_logging
+from geonormml.config import CONSISTENT_DATASET, DATASET_DIR, DATASET_SHEET, PROJECT_ROOT, setup_logging
+from geonormml.quality import collapse_spatial_matches
 
 logger = setup_logging("spatial_join")
 
@@ -30,6 +31,7 @@ OUTPUT_PATH = DATASET_DIR / "Merge_Filtered_training_ready_v5_spatial.xlsx"
 # =============================================================================
 # AUTO-DETECTION HELPERS
 # =============================================================================
+
 
 def find_spatial_file(directory: Path, keywords: list[str]) -> Path | None:
     """Find the first geo-file whose name contains any *keyword*, searching recursively."""
@@ -58,7 +60,7 @@ def parse_age_from_symbol(symbol: str) -> str:
     """Infer the geological age classification from standard INGEMMET codes."""
     if not isinstance(symbol, str) or not symbol:
         return "Unknown"
-    
+
     # Check prefixes in order of specificity
     if symbol.startswith("Qh") or symbol.startswith("Qp") or symbol.startswith("Q"):
         return "Quaternary"
@@ -88,7 +90,7 @@ def parse_age_from_symbol(symbol: str) -> str:
         return "Silurian"
     elif symbol.startswith("O"):
         return "Ordovician"
-    
+
     # Case-insensitive general checks
     symbol_upper = symbol.upper()
     if symbol_upper.startswith("Q"):
@@ -105,7 +107,7 @@ def parse_age_from_symbol(symbol: str) -> str:
         if any(x in symbol for x in ("e", "a", "o")):
             return "Paleogene"
         return "Permian"
-    
+
     return "Unknown"
 
 
@@ -127,6 +129,7 @@ def get_utm_zone_peru(lon: float) -> str:
 # MAIN PIPELINE
 # =============================================================================
 
+
 def main() -> None:
     logger.info("=== GeoNormML: Spatial Join and Geoprocessing ===")
 
@@ -140,6 +143,8 @@ def main() -> None:
     # 1. Load training dataset
     logger.info("Loading training dataset: %s", CONSISTENT_DATASET.name)
     df = pd.read_excel(CONSISTENT_DATASET, sheet_name=DATASET_SHEET)
+    if df.ID_Final.isna().any() or df.ID_Final.duplicated().any():
+        raise ValueError("Spatial enrichment requires unique, nonmissing ID_Final values.")
     logger.info("Loaded %d samples.", len(df))
 
     # Validate required coordinate columns
@@ -180,6 +185,7 @@ def main() -> None:
 # GEOLOGY JOIN
 # =============================================================================
 
+
 def _join_geology(gdf_samples: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
     """Spatial-join sample points with 50k (prioritized) or 100k geology map."""
     # Prioritize 50k geodata, fall back to 100k or generic map
@@ -192,21 +198,26 @@ def _join_geology(gdf_samples: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
         return gdf_samples
 
     logger.info("[FOUND] Geology file: %s", geology_path.name)
-    
+
     # Bbox spatial filter optimization with CRS projection
     try:
         # Read 1 row to get file CRS dynamically
         meta = gpd.read_file(geology_path, rows=1)
         file_crs = meta.crs
-        
+
         # Project samples to file CRS to compute correct bounding box
         gdf_samples_proj = gdf_samples.to_crs(file_crs)
-        minx, miny, maxx, maxy = gdf_samples_proj.geometry.x.min(), gdf_samples_proj.geometry.y.min(), gdf_samples_proj.geometry.x.max(), gdf_samples_proj.geometry.y.max()
-        
+        minx, miny, maxx, maxy = (
+            gdf_samples_proj.geometry.x.min(),
+            gdf_samples_proj.geometry.y.min(),
+            gdf_samples_proj.geometry.x.max(),
+            gdf_samples_proj.geometry.y.max(),
+        )
+
         # Buffer around sample points (10km if projected in meters, 0.1 deg if geographic)
         buffer = 10000.0 if gdf_samples_proj.crs.is_projected else 0.1
         bbox = (minx - buffer, miny - buffer, maxx + buffer, maxy + buffer)
-        
+
         logger.info("  Loading geology with projected filter (bbox: %s, CRS: %s)...", bbox, file_crs)
         gdf_geol = gpd.read_file(geology_path, bbox=bbox)
     except Exception as exc:
@@ -241,8 +252,7 @@ def _join_geology(gdf_samples: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
             gdf_geol["Geol_Age_100k_parsed"] = gdf_geol[sigla_col].apply(parse_age_from_symbol)
             age_col = "Geol_Age_100k_parsed"
 
-    logger.info("  Column detection → Unit: %s | Age: %s | Litho: %s",
-                unit_col or "—", age_col or "—", lith_col or "—")
+    logger.info("  Column detection → Unit: %s | Age: %s | Litho: %s", unit_col or "—", age_col or "—", lith_col or "—")
 
     cols_to_keep = [c for c in (unit_col, age_col, lith_col) if c]
     if not cols_to_keep:
@@ -270,7 +280,8 @@ def _join_geology(gdf_samples: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
         gdf_joined = gdf_joined.rename(columns=rename_map)
         logger.info("  Added geology columns: %s", list(rename_map.values()))
 
-    return gdf_joined
+    collapsed = collapse_spatial_matches(gdf_joined, list(rename_map.values()))
+    return gpd.GeoDataFrame(collapsed, geometry="geometry", crs=gdf_samples.crs)
 
 
 def _join_franjas(gdf_samples: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
@@ -282,19 +293,24 @@ def _join_franjas(gdf_samples: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
         return gdf_samples
 
     logger.info("[FOUND] Metallogenetic belts file: %s", franjas_path.name)
-    
+
     # Load with spatial filter (bbox) optimization
     try:
         # Read 1 row to get file CRS
         meta = gpd.read_file(franjas_path, rows=1)
         file_crs = meta.crs
-        
+
         # Project samples to file CRS
         gdf_samples_proj = gdf_samples.to_crs(file_crs)
-        minx, miny, maxx, maxy = gdf_samples_proj.geometry.x.min(), gdf_samples_proj.geometry.y.min(), gdf_samples_proj.geometry.x.max(), gdf_samples_proj.geometry.y.max()
+        minx, miny, maxx, maxy = (
+            gdf_samples_proj.geometry.x.min(),
+            gdf_samples_proj.geometry.y.min(),
+            gdf_samples_proj.geometry.x.max(),
+            gdf_samples_proj.geometry.y.max(),
+        )
         buffer = 10000.0 if gdf_samples_proj.crs.is_projected else 0.1
         bbox = (minx - buffer, miny - buffer, maxx + buffer, maxy + buffer)
-        
+
         logger.info("  Loading franjas with spatial filter (bbox: %s, CRS: %s)...", bbox, file_crs)
         gdf_franjas = gpd.read_file(franjas_path, bbox=bbox)
     except Exception as exc:
@@ -328,12 +344,14 @@ def _join_franjas(gdf_samples: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
     gdf_joined = gdf_joined.rename(columns={franja_col: "Metal_Belt"})
     logger.info("  Added Metal_Belt column.")
 
-    return gdf_joined
+    collapsed = collapse_spatial_matches(gdf_joined, ["Metal_Belt"])
+    return gpd.GeoDataFrame(collapsed, geometry="geometry", crs=gdf_samples.crs)
 
 
 # =============================================================================
 # FAULT DISTANCE
 # =============================================================================
+
 
 def _compute_fault_distance(gdf_samples: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
     """Compute distance to the nearest fault in kilometres."""
@@ -384,10 +402,13 @@ def _compute_fault_distance(gdf_samples: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
 # EXPORT
 # =============================================================================
 
+
 def _export_result(gdf_samples: gpd.GeoDataFrame) -> None:
     """Write the enriched dataset to Excel, preserving metadata sheets."""
     logger.info("Preparing export...")
     df_output = pd.DataFrame(gdf_samples.drop(columns=["geometry"], errors="ignore"))
+    if df_output.ID_Final.duplicated().any():
+        raise ValueError("Spatial export would duplicate sample IDs.")
 
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     logger.info("Saving to: %s", OUTPUT_PATH)

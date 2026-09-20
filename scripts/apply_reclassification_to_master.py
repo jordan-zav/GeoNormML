@@ -67,21 +67,11 @@ def main() -> None:
     excluded_df = df[df["ROCK_NAME"].isin(EXCLUDE_CLASSES)].copy()
     final_df = df[~df["ROCK_NAME"].isin(EXCLUDE_CLASSES)].copy()
 
-    changed_df = final_df[
-        final_df["ROCK_NAME_BEFORE_RECLASS"] != final_df["ROCK_NAME"]
-    ].copy()
+    changed_df = final_df[final_df["ROCK_NAME_BEFORE_RECLASS"] != final_df["ROCK_NAME"]].copy()
 
-    final_counts = (
-        final_df["ROCK_NAME"]
-        .value_counts()
-        .rename_axis("ROCK_NAME")
-        .reset_index(name="count")
-    )
+    final_counts = final_df["ROCK_NAME"].value_counts().rename_axis("ROCK_NAME").reset_index(name="count")
     excluded_counts = (
-        excluded_df["ROCK_NAME_BEFORE_RECLASS"]
-        .value_counts()
-        .rename_axis("excluded_class")
-        .reset_index(name="count")
+        excluded_df["ROCK_NAME_BEFORE_RECLASS"].value_counts().rename_axis("excluded_class").reset_index(name="count")
     )
     changed_counts = (
         changed_df[["ROCK_NAME_BEFORE_RECLASS", "ROCK_NAME"]]

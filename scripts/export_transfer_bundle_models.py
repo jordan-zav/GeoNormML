@@ -2,17 +2,24 @@ from __future__ import annotations
 
 import json
 import shutil
-from pathlib import Path
 
 import joblib
 import pandas as pd
 from sklearn.base import clone
 from sklearn.preprocessing import LabelEncoder
 
-from geonormml.config import ARTIFACTS_DIR, DATASET_PATH, DATASET_SHEET, ROCK_TYPE_COLUMN, TARGET_COLUMN, setup_logging
+from geonormml.config import (
+    ARTIFACTS_DIR,
+    DATASET_SHEET,
+    ROCK_TYPE_COLUMN,
+    TARGET_COLUMN,
+    get_dataset_path,
+    setup_logging,
+)
 from geonormml.data import load_training_dataset
 from geonormml.features import FEATURE_SETS
 from geonormml.ml import build_models, build_preprocessor
+from geonormml.provenance import training_provenance
 
 logger = setup_logging("export_transfer_bundle_models")
 
@@ -40,7 +47,9 @@ PIPELINE_POLICIES = {
     },
     "oxides": {
         "status": "secondary",
-        "warning": "Incluye CO2, F, Cl, SO3 y S, columnas con completitud muy baja o nula; no usar como baseline oficial.",
+        "warning": (
+            "Incluye CO2, F, Cl, SO3 y S, columnas con completitud muy baja o nula; no usar como baseline oficial."
+        ),
         "rationale": "Solo para comparacion extendida.",
     },
     "combined": {
@@ -50,7 +59,9 @@ PIPELINE_POLICIES = {
     },
     "oxides_contextual": {
         "status": "experimental",
-        "warning": "Incluye Clase_SiO2 y Serie_Mag, variables derivadas que pueden suavizar artificialmente el problema.",
+        "warning": (
+            "Incluye Clase_SiO2 y Serie_Mag, variables derivadas que pueden suavizar artificialmente el problema."
+        ),
         "rationale": "Experimento contextual, no recomendado para integracion oficial.",
     },
     "combined_contextual": {
@@ -64,14 +75,19 @@ PIPELINE_POLICIES = {
         "rationale": "Oxidos + CIPW + indices petrologicos derivados (ASI, Mg#, DI, ICN).",
     },
     "combined_enriched_spatial": {
-        "status": "official",
+        "status": "experimental",
         "warning": "Requiere coordenadas geográficas (LON, LAT) de la muestra.",
-        "rationale": "Pipeline espacial oficial recomendado. 100% transferible y libre de target leakage (usa Trench_Dist y LAT). No requiere shapefiles pesados.",
+        "rationale": (
+            "Experimento espacial con Trench_Dist y LAT; requiere validacion espacial externa antes de transferirlo."
+        ),
     },
     "combined_enriched_geodata": {
         "status": "experimental",
         "warning": "Alto riesgo de Target Leakage por Geol_Unit (alta cardinalidad). No transferible fuera de Perú.",
-        "rationale": "Pipeline experimental con geología regional (1:50k) e INGEMMET. Útil solo para análisis retrospectivo local.",
+        "rationale": (
+            "Pipeline experimental con geología regional (1:50k) e INGEMMET. Útil solo "
+            "para análisis retrospectivo local."
+        ),
     },
     "combined_full": {
         "status": "experimental",
@@ -106,7 +122,8 @@ def export_bundle(df: pd.DataFrame, domain_code: str, feature_set_name: str, mod
         "model_name": model_name,
         "target_column": TARGET_COLUMN,
         "rock_type_column": ROCK_TYPE_COLUMN,
-        "dataset_path": str(DATASET_PATH),
+        "dataset_path": get_dataset_path().name,
+        "provenance": training_provenance(),
         "dataset_sheet": DATASET_SHEET,
         "n_rows": int(len(domain_df)),
         "n_classes": int(len(label_encoder.classes_)),
@@ -126,7 +143,7 @@ def export_bundle(df: pd.DataFrame, domain_code: str, feature_set_name: str, mod
         "domain_name": domain_name,
         "feature_set": feature_set_name,
         "model_name": model_name,
-        "artifact_path": str(out_path),
+        "artifact_path": f"all_models/models/{out_path.name}",
         "status": policy["status"],
         "warning": policy["warning"],
         "rationale": policy["rationale"],
@@ -141,6 +158,9 @@ def main() -> None:
     ALL_MODELS_MODELS_DIR.mkdir(parents=True, exist_ok=True)
 
     metrics_df = pd.read_csv(ARTIFACTS_DIR / "ml_benchmark" / "metrics_summary.csv")
+    provenance = json.loads((ARTIFACTS_DIR / "ml_benchmark" / "provenance.json").read_text(encoding="utf-8"))
+    if provenance != training_provenance():
+        raise ValueError("Benchmark dataset or dependencies changed; rerun benchmark before transferring metrics.")
     df = load_training_dataset()
 
     exported_rows: list[dict[str, object]] = []
@@ -160,7 +180,7 @@ def main() -> None:
     json_path.write_text(
         json.dumps(
             {
-                "dataset_path": str(DATASET_PATH),
+                "dataset_path": get_dataset_path().name,
                 "dataset_sheet": DATASET_SHEET,
                 "models": exported_rows,
             },
@@ -188,7 +208,9 @@ def main() -> None:
     logger.info(csv_path)
     logger.info(json_path)
     logger.info(txt_path)
-    logger.info(export_df[["domain_name", "feature_set", "model_name", "status", "artifact_path"]].to_string(index=False))
+    logger.info(
+        export_df[["domain_name", "feature_set", "model_name", "status", "artifact_path"]].to_string(index=False)
+    )
 
 
 if __name__ == "__main__":

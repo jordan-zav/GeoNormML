@@ -12,9 +12,7 @@ logger = setup_logging("run_cipw_from_csv")
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        description="Compute CIPW normative minerals from a geochemical CSV."
-    )
+    parser = argparse.ArgumentParser(description="Compute CIPW normative minerals from a geochemical CSV.")
     parser.add_argument(
         "--input",
         required=True,
@@ -46,8 +44,7 @@ def main() -> None:
     output_path = Path(args.output)
 
     if not input_path.exists():
-        logger.error("Input file not found: %s", input_path)
-        return
+        raise FileNotFoundError(f"Input file not found: {input_path}")
 
     df = pd.read_csv(input_path)
     logger.info("Loaded %d rows from %s", len(df), input_path.name)

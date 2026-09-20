@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from pathlib import Path
-
 import pandas as pd
 
 from geonormml.config import DATASET_DIR, setup_logging
@@ -24,8 +22,7 @@ def main() -> None:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     if not INPUT_PATH.exists():
-        logger.error("Input file not found: %s", INPUT_PATH)
-        return
+        raise FileNotFoundError(f"Input file not found: {INPUT_PATH}")
 
     df = pd.read_excel(INPUT_PATH, sheet_name="training_ready_quality")
     input_rows = len(df)
@@ -34,14 +31,10 @@ def main() -> None:
     df["ROCK_NAME_BEFORE_FINAL_MERGE"] = df["ROCK_NAME"]
     df["ROCK_NAME"] = df["ROCK_NAME"].replace(FINAL_MERGES)
 
-    final_class_frequency = (
-        df["ROCK_NAME"].value_counts().rename_axis("ROCK_NAME").reset_index(name="count")
-    )
+    final_class_frequency = df["ROCK_NAME"].value_counts().rename_axis("ROCK_NAME").reset_index(name="count")
     changed_rows = df[df["ROCK_NAME_BEFORE_FINAL_MERGE"] != df["ROCK_NAME"]].copy()
     changed_summary = (
-        changed_rows[["ROCK_NAME_BEFORE_FINAL_MERGE", "ROCK_NAME"]]
-        .value_counts()
-        .reset_index(name="rows_changed")
+        changed_rows[["ROCK_NAME_BEFORE_FINAL_MERGE", "ROCK_NAME"]].value_counts().reset_index(name="rows_changed")
     )
 
     classes_below_min = final_class_frequency[final_class_frequency["count"] < MIN_CLASS_SIZE]

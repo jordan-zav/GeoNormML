@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from pathlib import Path
-
 import pandas as pd
 
 from geonormml.config import DATASET_DIR, setup_logging
@@ -53,8 +51,7 @@ def main() -> None:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     if not INPUT_PATH.exists():
-        logger.error("Input file not found: %s", INPUT_PATH)
-        return
+        raise FileNotFoundError(f"Input file not found: {INPUT_PATH}")
 
     df = pd.read_excel(INPUT_PATH, sheet_name="training_ready")
     input_rows = len(df)
@@ -65,12 +62,8 @@ def main() -> None:
     removed_df = df[df["Quality_Flag_Recomputed"] == 2].copy()
     kept_df = df[df["Quality_Flag_Recomputed"] != 2].copy()
 
-    final_class_frequency = (
-        kept_df["ROCK_NAME"].value_counts().rename_axis("ROCK_NAME").reset_index(name="count")
-    )
-    removed_by_class = (
-        removed_df["ROCK_NAME"].value_counts().rename_axis("ROCK_NAME").reset_index(name="rows_removed")
-    )
+    final_class_frequency = kept_df["ROCK_NAME"].value_counts().rename_axis("ROCK_NAME").reset_index(name="count")
+    removed_by_class = removed_df["ROCK_NAME"].value_counts().rename_axis("ROCK_NAME").reset_index(name="rows_removed")
     flag_counts = (
         df["Quality_Flag_Recomputed"]
         .value_counts()

@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 from matplotlib import font_manager
 from matplotlib.patches import FancyBboxPatch, Wedge
 
-
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 OUTPUT_DIR = PROJECT_ROOT / "artifacts" / "totem_geonorm"
 
@@ -104,7 +103,16 @@ def build_graphic() -> plt.Figure:
     ax.text(0.5, 0.185, "por criterios de depuración y QA/QC", ha="center", color=MUTED, fontsize=9.2)
 
     rounded_box(ax, (0.15, 0.075), 0.70, 0.065, PAPER_LIGHT, TEAL, 1.0, 0.018)
-    ax.text(0.5, 0.107, "IDs únicos después del control de calidad", ha="center", va="center", color=NAVY, fontsize=8.7, fontweight="bold")
+    ax.text(
+        0.5,
+        0.107,
+        "IDs únicos después del control de calidad",
+        ha="center",
+        va="center",
+        color=NAVY,
+        fontsize=8.7,
+        fontweight="bold",
+    )
 
     return fig
 

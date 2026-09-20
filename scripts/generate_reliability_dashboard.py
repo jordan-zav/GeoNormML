@@ -6,57 +6,36 @@ el dataset oficial y el estado de GeoNormPy se obtiene ejecutando sus pruebas.
 
 from __future__ import annotations
 
-from pathlib import Path
+import json
 import re
 import subprocess
 import sys
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import pandas as pd
 
+from geonormml.config import ARTIFACTS_DIR, PROJECT_ROOT, get_dataset_path
+from geonormml.provenance import training_provenance
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-ARTIFACTS_DIR = PROJECT_ROOT / "artifacts"
-RANKING_PATH = (
-    ARTIFACTS_DIR
-    / "ml_benchmark"
-    / "figuras_resumen"
-    / "ranking_configuraciones.csv"
-)
-DATASET_PATH = (
-    PROJECT_ROOT
-    / "Dataset"
-    / "Filtered"
-    / "final"
-    / "Merge_Filtered_training_ready_v5_spatial.xlsx"
-)
 OUTPUT_PATH = ARTIFACTS_DIR / "dashboard_confiabilidad_actualizado.png"
 
 
-def spatial_metrics() -> dict[str, float]:
-    """Lee exactitud y MCC de los dos modelos espaciales oficiales."""
-    ranking = pd.read_csv(RANKING_PATH)
-    selected = ranking[
-        (ranking["modelo"] == "XGBoost")
-        & (ranking["feature_set"] == "combined_enriched_spatial")
-    ].set_index("domain")
-
-    missing = {"VOL", "PLU"} - set(selected.index)
-    if missing:
-        raise ValueError(f"Faltan dominios espaciales en el ranking: {sorted(missing)}")
-
-    return {
-        "Exactitud espacial · VOL": float(selected.loc["VOL", "CA"]),
-        "MCC espacial · VOL": float(selected.loc["VOL", "MCC"]),
-        "Exactitud espacial · PLU": float(selected.loc["PLU", "CA"]),
-        "MCC espacial · PLU": float(selected.loc["PLU", "MCC"]),
-    }
+def baseline_metrics() -> dict[str, float]:
+    payload = json.loads((ARTIFACTS_DIR / "validation/baseline_validation.json").read_text(encoding="utf-8"))
+    if payload["provenance"] != training_provenance():
+        raise ValueError("Validation provenance differs from current dataset/environment.")
+    values = {}
+    for row in payload["models"]:
+        values[f"Accuracy CV / {row['domain']}"] = row["CA"]
+        values[f"MCC CV / {row['domain']}"] = row["MCC"]
+    return values
 
 
 def cipw_balance_score() -> tuple[float, int]:
     """Calcula la fraccion con error de balance de masa <= 0.10."""
     data = pd.read_excel(
-        DATASET_PATH,
+        get_dataset_path(),
         sheet_name="training_ready_final",
         usecols=["mass_balance_error"],
     )
@@ -83,30 +62,30 @@ def geonormpy_test_score() -> tuple[float, int, int]:
     failed = int(failed_match.group(1)) if failed_match else 0
     errors = int(error_match.group(1)) if error_match else 0
     total = passed + failed + errors
-    if total == 0:
+    if total == 0 or (result.returncode != 0 and failed == 0 and errors == 0):
         raise RuntimeError(f"No se pudo interpretar el resultado de pytest:\n{output}")
     return passed / total, passed, total
 
 
 def create_dashboard() -> Path:
     """Compone y guarda el dashboard en formato PNG."""
-    metrics = spatial_metrics()
+    metrics = baseline_metrics()
     cipw_score, sample_count = cipw_balance_score()
     test_score, tests_passed, tests_total = geonormpy_test_score()
 
     labels = [
-        "MCC espacial · PLU",
-        "Exactitud espacial · PLU",
-        "MCC espacial · VOL",
-        "Exactitud espacial · VOL",
+        "MCC CV / PLU",
+        "Accuracy CV / PLU",
+        "MCC CV / VOL",
+        "Accuracy CV / VOL",
         "Balance CIPW · error ≤ 0.10",
         "Pruebas GeoNormPy",
     ]
     values = [
-        metrics["MCC espacial · PLU"],
-        metrics["Exactitud espacial · PLU"],
-        metrics["MCC espacial · VOL"],
-        metrics["Exactitud espacial · VOL"],
+        metrics["MCC CV / PLU"],
+        metrics["Accuracy CV / PLU"],
+        metrics["MCC CV / VOL"],
+        metrics["Accuracy CV / VOL"],
         cipw_score,
         test_score,
     ]
@@ -135,7 +114,7 @@ def create_dashboard() -> Path:
     ax.text(
         0,
         1.025,
-        "GeoNormML + GeoNormPy · modelos espaciales oficiales",
+        "GeoNormML + GeoNormPy · modelos geoquimicos / CV por grupos",
         transform=ax.transAxes,
         fontsize=13,
         color="#52636A",
@@ -165,8 +144,8 @@ def create_dashboard() -> Path:
         0.125,
         0.018,
         (
-            "Fuentes: validación cruzada estratificada de 5 pliegues · "
-            f"dataset v5 ({sample_count:,} muestras) · "
+            "Fuentes: validacion cruzada por grupos de 5 pliegues · "
+            f"dataset depurado ({sample_count:,} muestras) · "
             f"GeoNormPy {tests_passed}/{tests_total} pruebas"
         ),
         fontsize=9.5,

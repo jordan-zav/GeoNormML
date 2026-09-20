@@ -6,8 +6,8 @@ como espacio composicional: no sustituye la clasificación modal QAPF.
 
 from __future__ import annotations
 
-from pathlib import Path
 import sys
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -19,9 +19,8 @@ SRC_DIR = PROJECT_ROOT / "src"
 if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
 
-from geonormml.config import ARTIFACTS_DIR, ROCK_TYPE_COLUMN, TARGET_COLUMN, setup_logging
-from geonormml.data import load_training_dataset
-
+from geonormml.config import ARTIFACTS_DIR, ROCK_TYPE_COLUMN, TARGET_COLUMN, setup_logging  # noqa: E402
+from geonormml.data import load_training_dataset  # noqa: E402
 
 logger = setup_logging("generate_tas_comparison")
 OUTPUT_DIR = ARTIFACTS_DIR / "tas_comparison"
@@ -112,7 +111,10 @@ def plot_domain(data: pd.DataFrame, domain: str) -> None:
     palette = {"oversaturated": "#377eb8", "undersaturated": "#e41a1c"}
     for state, subset in domain_data.groupby("silica_saturation"):
         axes[1].scatter(
-            subset["SiO2_TAS"], subset["Alcalis_TAS"], s=18, alpha=0.65,
+            subset["SiO2_TAS"],
+            subset["Alcalis_TAS"],
+            s=18,
+            alpha=0.65,
             label={"oversaturated": "Sobresaturada", "undersaturated": "Subsaturada"}.get(state, state),
             color=palette.get(state, "#666666"),
         )
@@ -169,7 +171,12 @@ def plot_volcanic_tas_concordance(data: pd.DataFrame) -> None:
     plt.close()
 
     coverage = len(assigned) / len(volcanic) if len(volcanic) else 0
-    logger.info("Concordancia TAS-volcánicas: %d/%d muestras en campos comparables (%.1f%%)", len(assigned), len(volcanic), 100 * coverage)
+    logger.info(
+        "Concordancia TAS-volcánicas: %d/%d muestras en campos comparables (%.1f%%)",
+        len(assigned),
+        len(volcanic),
+        100 * coverage,
+    )
 
 
 def main() -> None:

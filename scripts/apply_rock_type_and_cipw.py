@@ -1,10 +1,7 @@
 from __future__ import annotations
 
-from pathlib import Path
-
 import pandas as pd
 from geonormpy.norms.batch import calculate_cipw_dataframe
-
 
 from geonormml.config import PROJECT_ROOT
 
@@ -77,13 +74,10 @@ def main() -> None:
     df["ROCK_TYPE_BEFORE_CORRECTION"] = df["ROCK TYPE"]
     df["ROCK TYPE"] = df["ROCK_NAME"].map(corrected_rock_type)
 
-    before = df["ROCK_TYPE_BEFORE_CORRECTION"].fillna("<<NULL>>")
-    after = df["ROCK TYPE"]
     df["ROCK_TYPE_CORRECTION_FLAG"] = "unchanged"
     df.loc[df["ROCK_TYPE_BEFORE_CORRECTION"].isna(), "ROCK_TYPE_CORRECTION_FLAG"] = "filled_from_rock_name"
     df.loc[
-        df["ROCK_TYPE_BEFORE_CORRECTION"].notna()
-        & (df["ROCK_TYPE_BEFORE_CORRECTION"] != df["ROCK TYPE"]),
+        df["ROCK_TYPE_BEFORE_CORRECTION"].notna() & (df["ROCK_TYPE_BEFORE_CORRECTION"] != df["ROCK TYPE"]),
         "ROCK_TYPE_CORRECTION_FLAG",
     ] = "corrected_from_rock_name"
 
@@ -95,27 +89,14 @@ def main() -> None:
 
     final_df = pd.concat([df.reset_index(drop=True), cipw_df.reset_index(drop=True)], axis=1)
 
-    rock_type_audit = (
-        pd.crosstab(
-            final_df["ROCK_NAME"],
-            final_df["ROCK TYPE"],
-            dropna=False,
-        )
-        .reset_index()
-    )
-    flag_counts = (
-        final_df["ROCK_TYPE_CORRECTION_FLAG"]
-        .value_counts()
-        .rename_axis("flag")
-        .reset_index(name="count")
-    )
+    rock_type_audit = pd.crosstab(
+        final_df["ROCK_NAME"],
+        final_df["ROCK TYPE"],
+        dropna=False,
+    ).reset_index()
+    flag_counts = final_df["ROCK_TYPE_CORRECTION_FLAG"].value_counts().rename_axis("flag").reset_index(name="count")
     cipw_error_rows = final_df[final_df["calc_error"].notna()].copy()
-    class_frequency = (
-        final_df["ROCK_NAME"]
-        .value_counts()
-        .rename_axis("ROCK_NAME")
-        .reset_index(name="count")
-    )
+    class_frequency = final_df["ROCK_NAME"].value_counts().rename_axis("ROCK_NAME").reset_index(name="count")
 
     with pd.ExcelWriter(OUTPUT_PATH, engine="openpyxl") as writer:
         final_df.to_excel(writer, sheet_name="master_cipw", index=False)

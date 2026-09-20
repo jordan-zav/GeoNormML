@@ -19,13 +19,14 @@ from sklearn.metrics import (
     roc_auc_score,
     roc_curve,
 )
-from sklearn.model_selection import StratifiedKFold, cross_val_predict
 from sklearn.preprocessing import LabelEncoder, label_binarize
 
-from geonormml.config import ARTIFACTS_DIR, RANDOM_STATE, ROCK_TYPE_COLUMN, TARGET_COLUMN, setup_logging
+from geonormml.config import ARTIFACTS_DIR, ID_COLUMN, ROCK_TYPE_COLUMN, TARGET_COLUMN, setup_logging
 from geonormml.data import load_training_dataset
 from geonormml.features import FEATURE_SETS
 from geonormml.ml import build_models, build_preprocessor
+from geonormml.provenance import training_provenance
+from geonormml.split import grouped_cv_indices, make_holdout_split
 
 logger = setup_logging("run_ml_benchmark")
 
@@ -55,10 +56,12 @@ FEATURE_SET_NAMES = [
 ]
 
 
-
-
-def compute_multiclass_roc(y_true_encoded: np.ndarray, y_prob: np.ndarray, class_names: list[str]) -> tuple[float, dict]:
+def compute_multiclass_roc(
+    y_true_encoded: np.ndarray, y_prob: np.ndarray, class_names: list[str]
+) -> tuple[float, dict]:
     y_bin = label_binarize(y_true_encoded, classes=np.arange(len(class_names)))
+    if len(class_names) == 2:
+        y_bin = np.column_stack([1 - y_bin[:, 0], y_bin[:, 0]])
     auc_macro = roc_auc_score(y_bin, y_prob, multi_class="ovr", average="macro")
 
     per_class = {}
@@ -122,11 +125,13 @@ def evaluate_combo(df: pd.DataFrame, domain_code: str, feature_set_name: str, mo
     y_encoded = label_encoder.fit_transform(y)
     class_names = label_encoder.classes_.tolist()
 
-    cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=RANDOM_STATE)
-
-    estimator = clone(model)
-    y_pred_encoded = cross_val_predict(estimator, X, y_encoded, cv=cv, method="predict", n_jobs=1)
-    y_prob = cross_val_predict(clone(model), X, y_encoded, cv=cv, method="predict_proba", n_jobs=1)
+    cv = grouped_cv_indices(df)
+    y_pred_encoded = np.empty(len(df), dtype=int)
+    y_prob = np.empty((len(df), len(class_names)))
+    for train, valid in cv:
+        estimator = clone(model).fit(X.iloc[train], y_encoded[train])
+        y_pred_encoded[valid] = estimator.predict(X.iloc[valid])
+        y_prob[valid] = estimator.predict_proba(X.iloc[valid])
 
     cm = confusion_matrix(y_encoded, y_pred_encoded)
     auc_macro_ovr, roc_payload = compute_multiclass_roc(y_encoded, y_prob, class_names)
@@ -137,6 +142,7 @@ def evaluate_combo(df: pd.DataFrame, domain_code: str, feature_set_name: str, mo
         "model": model_name,
         "n_rows": len(df),
         "n_classes": len(class_names),
+        "validation": "stratified_group_cv_training_partition",
         "CA": float(accuracy_score(y_encoded, y_pred_encoded)),
         "AUC_macro_ovr": float(auc_macro_ovr),
         "F1_weighted": float(f1_score(y_encoded, y_pred_encoded, average="weighted", zero_division=0)),
@@ -169,6 +175,8 @@ def main() -> None:
     ROC_DIR.mkdir(parents=True, exist_ok=True)
 
     df = load_training_dataset()
+    holdout = make_holdout_split(df, id_column=ID_COLUMN)
+    df = df[df[ID_COLUMN].isin(holdout.train_ids)].copy()
 
     all_metrics: list[dict] = []
     for domain_code in ["VOL", "PLU"]:
@@ -180,7 +188,9 @@ def main() -> None:
             if missing_cols:
                 logger.warning(
                     "Skipping %s | %s — missing columns: %s",
-                    domain_code, feature_set_name, missing_cols,
+                    domain_code,
+                    feature_set_name,
+                    missing_cols,
                 )
                 continue
 
@@ -197,6 +207,7 @@ def main() -> None:
     metrics_df = pd.DataFrame(all_metrics).sort_values(["domain", "feature_set", "model"])
     metrics_path = RESULTS_DIR / "metrics_summary.csv"
     metrics_df.to_csv(metrics_path, index=False, encoding="utf-8-sig")
+    (RESULTS_DIR / "provenance.json").write_text(json.dumps(training_provenance(), indent=2) + "\n", encoding="utf-8")
 
     summary_path = RESULTS_DIR / "metrics_summary.txt"
     summary_path.write_text(metrics_df.to_string(index=False), encoding="utf-8")

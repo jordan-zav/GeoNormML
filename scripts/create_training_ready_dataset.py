@@ -44,23 +44,10 @@ def main() -> None:
 
     training_df = df.loc[~missing_mask].copy()
 
-    class_frequency = (
-        training_df["ROCK_NAME"]
-        .value_counts()
-        .rename_axis("ROCK_NAME")
-        .reset_index(name="count")
-    )
-    missing_by_class = (
-        audit_df["ROCK_NAME"]
-        .value_counts()
-        .rename_axis("ROCK_NAME")
-        .reset_index(name="rows_removed")
-    )
+    class_frequency = training_df["ROCK_NAME"].value_counts().rename_axis("ROCK_NAME").reset_index(name="count")
+    missing_by_class = audit_df["ROCK_NAME"].value_counts().rename_axis("ROCK_NAME").reset_index(name="rows_removed")
     missing_by_source = (
-        audit_df["Source"]
-        .value_counts(dropna=False)
-        .rename_axis("Source")
-        .reset_index(name="rows_removed")
+        audit_df["Source"].value_counts(dropna=False).rename_axis("Source").reset_index(name="rows_removed")
     )
 
     with pd.ExcelWriter(OUTPUT_PATH, engine="openpyxl") as writer:

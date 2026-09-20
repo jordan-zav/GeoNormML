@@ -4,7 +4,6 @@ from dataclasses import dataclass
 
 import pandas as pd
 
-
 OXIDE_FEATURES_CORE = [
     "SiO2",
     "TiO2",
@@ -124,16 +123,17 @@ FEATURE_SETS = {
     # --- New sets (require spatial_join_dataset.py output) ---
     "combined_enriched_geodata": FeatureSet(
         name="combined_enriched_geodata",
-        columns=(
-            OXIDE_FEATURES_CORE + CIPW_FEATURES + CIPW_DERIVED_FEATURES
-            + SPATIAL_FEATURES + GEODATA_FEATURES
-        ),
+        columns=(OXIDE_FEATURES_CORE + CIPW_FEATURES + CIPW_DERIVED_FEATURES + SPATIAL_FEATURES + GEODATA_FEATURES),
     ),
     "combined_full": FeatureSet(
         name="combined_full",
         columns=(
-            OXIDE_FEATURES_CORE + CIPW_FEATURES + CIPW_DERIVED_FEATURES
-            + SPATIAL_FEATURES + GEODATA_FEATURES + PETROCHEM_CONTEXT_FEATURES
+            OXIDE_FEATURES_CORE
+            + CIPW_FEATURES
+            + CIPW_DERIVED_FEATURES
+            + SPATIAL_FEATURES
+            + GEODATA_FEATURES
+            + PETROCHEM_CONTEXT_FEATURES
         ),
     ),
 }

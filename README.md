@@ -20,6 +20,10 @@ normative mineral features, spatial context and reproducible model evaluation.
 > artifacts are intentionally excluded because they require separate provenance,
 > permissions and storage. The repository alone is not a pretrained classifier.
 
+> The [2026-09-20 code and dataset audit](docs/audit_20260920.md) supersedes earlier
+> sample counts and model scores: spatial joins had duplicated samples. Use the
+> audited clean dataset and grouped validation when reproducing new experiments.
+
 ## Workflow at a glance
 
 ```text
@@ -72,23 +76,45 @@ observations.
 
 ## Installation
 
-GeoNormML and GeoNormPy are sibling projects. From the directory that contains
-both repositories:
+GeoNormML and GeoNormPy are sibling projects. Python 3.11 is the validated
+environment. From the GeoNormML directory:
 
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
-python -m pip install -e .\GeoNormPy
-python -m pip install -e .\GeoNormML
+python -m pip install -r requirements.txt
+python -m pip check
+python -m pytest -q
 ```
 
 The reusable package can then be imported as `geonormml`. Full pipeline runs
 also require the private local datasets referenced by the project scripts.
 
-When using `requirements.txt`, run `python -m pip install -r requirements.txt`
-from the GeoNormML directory. It resolves GeoNormPy from `../GeoNormPy`, matching
-the sibling layout above.
+`requirements.txt` installs this project and resolves GeoNormPy from
+`../GeoNormPy`. `constraints-py311.txt` records the tested scientific dependencies.
+Use the latest GeoNormPy checkout: its packaging needs setuptools 77 or newer
+and an SPDX license expression without the obsolete license classifier.
+For core ML development without CIPW calculation, install with
+`python -m pip install -c constraints-py311.txt -e ".[dev]"`.
+
+### Clean data and validate the baseline models
+
+```powershell
+python -m scripts.clean_dataset --input "<source workbook.xlsx>"
+python -m scripts.build_modeling_artifacts
+python -m scripts.validate_models
+python -m scripts.export_official_models
+python -m scripts.generate_shap_plots
+```
+
+Cleaning creates `Dataset/Filtered/final/GeoNormML_training_clean.xlsx`, a CSV,
+excluded-row audit and SHA-256 manifest. It never overwrites its input or an
+existing output. Set `GEONORMML_DATASET_PATH` to use another audited workbook;
+set `GEONORMML_ARTIFACTS_DIR` to redirect generated artifacts. Export defaults
+to the two geochemical baselines. `--include-spatial` adds experimental spatial
+models, requiring separate geographic validation. Pipeline steps 8 and 9 now
+export first, then explain those exact models with SHAP.
 
 ### Clean working copy
 
@@ -136,8 +162,9 @@ their stage. Review them before running against a new dataset.
 Version 0.1.0 is an active research baseline. Model performance is meaningful
 only for the documented dataset, label taxonomy and validation split; it must
 not be generalized to new regions or sample populations without external
-validation. An automated regression suite still needs to be defined before a
-public software release.
+validation. The regression suite covers cleaning, spatial overlaps, sample-group
+separation, exports, missing-data handling and estimator serialization. It does
+not establish geological validity or geographic transferability.
 
 ## License
 

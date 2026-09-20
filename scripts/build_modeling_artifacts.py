@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
 
 import pandas as pd
 
@@ -9,6 +8,7 @@ from geonormml.config import (
     ARTIFACTS_DIR,
     ID_COLUMN,
     MANIFESTS_DIR,
+    ROCK_TYPE_COLUMN,
     SPLITS_DIR,
     TARGET_COLUMN,
     setup_logging,
@@ -16,7 +16,6 @@ from geonormml.config import (
 from geonormml.data import load_training_dataset
 from geonormml.features import FEATURE_SETS, validate_feature_columns
 from geonormml.split import make_cv_folds, make_holdout_split
-
 
 logger = setup_logging("build_modeling_artifacts")
 
@@ -28,11 +27,15 @@ def main() -> None:
 
     df = load_training_dataset()
     missing = validate_feature_columns(df)
+    if "combined_core" in missing:
+        raise ValueError(f"Missing baseline features: {missing['combined_core']}")
     if missing:
-        raise ValueError(f"Missing columns in feature definitions: {missing}")
+        logger.warning("Optional feature sets unavailable: %s", missing)
 
     manifest_rows = []
     for feature_set in FEATURE_SETS.values():
+        if feature_set.name in missing:
+            continue
         manifest_rows.append(
             {
                 "feature_set": feature_set.name,
@@ -45,9 +48,7 @@ def main() -> None:
     manifest_path = MANIFESTS_DIR / "feature_sets.csv"
     manifest_df.to_csv(manifest_path, index=False, encoding="utf-8-sig")
 
-    target_frequency = (
-        df[TARGET_COLUMN].value_counts().rename_axis(TARGET_COLUMN).reset_index(name="count")
-    )
+    target_frequency = df[TARGET_COLUMN].value_counts().rename_axis(TARGET_COLUMN).reset_index(name="count")
     target_frequency_path = MANIFESTS_DIR / "target_frequency.csv"
     target_frequency.to_csv(target_frequency_path, index=False, encoding="utf-8-sig")
 
@@ -59,7 +60,15 @@ def main() -> None:
     holdout_path = SPLITS_DIR / "holdout_split.json"
     holdout_path.write_text(json.dumps(holdout_payload, indent=2), encoding="utf-8")
 
-    cv_folds = make_cv_folds(df, id_column=ID_COLUMN)
+    training = df[df[ID_COLUMN].isin(holdout.train_ids)]
+    cv_folds = {
+        "format": 2,
+        "strategy": "stratified_group_cv_training_partition",
+        "domains": {
+            domain: make_cv_folds(training[training[ROCK_TYPE_COLUMN].eq(domain)], id_column=ID_COLUMN)
+            for domain in ("VOL", "PLU")
+        },
+    }
     cv_path = SPLITS_DIR / "cv_folds.json"
     cv_path.write_text(json.dumps(cv_folds, indent=2), encoding="utf-8")
 

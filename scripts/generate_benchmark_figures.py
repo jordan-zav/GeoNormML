@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from pathlib import Path
 import sys
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -14,9 +14,8 @@ SRC_DIR = PROJECT_ROOT / "src"
 if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
 
-from geonormml.config import ARTIFACTS_DIR, ROCK_TYPE_COLUMN, TARGET_COLUMN, setup_logging
-from geonormml.data import load_training_dataset
-
+from geonormml.config import ARTIFACTS_DIR, ROCK_TYPE_COLUMN, TARGET_COLUMN, setup_logging  # noqa: E402
+from geonormml.data import load_training_dataset  # noqa: E402
 
 logger = setup_logging("generate_benchmark_figures")
 
@@ -117,11 +116,7 @@ def plot_ranking(data: pd.DataFrame, domain: str, n: int = 10) -> pd.DataFrame:
 
 def plot_class_distribution(training_data: pd.DataFrame, domain: str) -> None:
     """Muestra el tamaño de cada clase y hace visible el desbalance del dataset."""
-    counts = (
-        training_data[training_data[ROCK_TYPE_COLUMN] == domain][TARGET_COLUMN]
-        .value_counts()
-        .sort_values()
-    )
+    counts = training_data[training_data[ROCK_TYPE_COLUMN] == domain][TARGET_COLUMN].value_counts().sort_values()
     plt.figure(figsize=(10, max(5, len(counts) * 0.55)))
     bars = plt.barh(counts.index, counts.values, color="#2c7fb8")
     plt.xlabel("Número de muestras")

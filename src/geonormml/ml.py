@@ -44,7 +44,7 @@ def build_preprocessor(
         transformers.append(
             (
                 "numeric",
-                SimpleImputer(strategy="median"),
+                SimpleImputer(strategy="median", keep_empty_features=True),
                 numeric_columns,
             )
         )
@@ -54,7 +54,10 @@ def build_preprocessor(
                 "categorical",
                 Pipeline(
                     steps=[
-                        ("imputer", SimpleImputer(strategy="most_frequent")),
+                        (
+                            "imputer",
+                            SimpleImputer(strategy="constant", fill_value="__missing__", keep_empty_features=True),
+                        ),
                         ("encoder", OneHotEncoder(handle_unknown="ignore", sparse_output=False)),
                     ]
                 ),

@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from pathlib import Path
-
 import pandas as pd
 
 from geonormml.config import DATASET_DIR, setup_logging
@@ -18,17 +16,14 @@ def main() -> None:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     if not INPUT_PATH.exists():
-        logger.error("Input file not found: %s", INPUT_PATH)
-        return
+        raise FileNotFoundError(f"Input file not found: {INPUT_PATH}")
 
     df = pd.read_excel(INPUT_PATH, sheet_name="training_ready")
 
     df = df.copy()
     df.insert(0, "ID_Final", range(1, len(df) + 1))
 
-    class_frequency = (
-        df["ROCK_NAME"].value_counts().rename_axis("ROCK_NAME").reset_index(name="count")
-    )
+    class_frequency = df["ROCK_NAME"].value_counts().rename_axis("ROCK_NAME").reset_index(name="count")
 
     with pd.ExcelWriter(OUTPUT_PATH, engine="openpyxl") as writer:
         df.to_excel(writer, sheet_name="training_ready", index=False)

@@ -1,11 +1,4 @@
+# One dependency definition, with the validated environment constrained below.
+-c constraints-py311.txt
+-e .[dev]
 -e ../GeoNormPy
-pandas>=1.5
-openpyxl>=3.1
-numpy>=1.24
-scikit-learn>=1.4
-xgboost>=2.0
-geopandas>=0.14
-matplotlib>=3.7
-seaborn>=0.13
-shap>=0.44
-joblib>=1.3
