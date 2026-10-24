@@ -20,7 +20,7 @@
         "Seleccionar modelos por dominio litológico y coherencia petrológica."
       ],
       "caption": "Distribución geográfica del dataset depurado",
-      "visual": "docs/dataset filtrado.jpg"
+      "visual": "docs/dataset_filtrado.jpg"
     },
     {
       "kind": "method",
@@ -36,7 +36,7 @@
       "body": "Dataset final: 2 755 muestras y 19 clases. Volcánicas: 1 764 muestras / 9 clases. Plutónicas: 991 muestras / 10 clases. Se evaluaron Random Forest, XGBoost y SVM con PCA.",
       "steps": ["oxides_core\nóxidos mayores", "cipw\nminerales normativos", "combined_core\nóxidos + CIPW", "Métricas\nCA · AUC · F1 · MCC"],
       "caption": "Cobertura espacial después de la depuración",
-      "visual": "docs/dataset filtrado.jpg"
+      "visual": "docs/dataset_filtrado.jpg"
     },
     {
       "kind": "results",
@@ -79,7 +79,7 @@
       ],
       "visuals": [
         {"path": "docs/diagrama.jpg", "caption": "Flujo de salidas reproducibles"},
-        {"path": "docs/dataset filtrado.jpg", "caption": "Dataset regional curado"}
+        {"path": "docs/dataset_filtrado.jpg", "caption": "Dataset regional curado"}
       ],
       "bullets": ["La suite no reemplaza el criterio geológico: entrega probabilidades, advertencias y trazabilidad para apoyar la interpretación petrológica."]
     },

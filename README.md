@@ -75,6 +75,17 @@ Generated datasets and models must retain the lineage of their input records.
 Spatial joins and CIPW values are derived features, not independent geological
 observations.
 
+## Fuentes de datos
+
+Este repositorio **no incluye** las bases de datos originales, intermedias ni los modelos entrenados serializados, tanto por razones de almacenamiento y licencias como por trazabilidad de procedencia. Para reproducir los experimentos, los datos deben obtenerse directamente de sus fuentes primarias:
+
+- **GEOROC** (*Geochemistry of Rocks of the Oceans and Continents*, DIGIS, Universidad de Göttingen): datos bajo la licencia [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). Al utilizar datos de GEOROC es obligatorio citar a GEOROC y las referencias originales de cada muestra individual según [https://georoc.mpch-mainz.gwdg.de/georoc/cite.asp](https://georoc.mpch-mainz.gwdg.de/georoc/cite.asp), y cualquier conjunto derivado se distribuye bajo la licencia CC BY-SA 4.0.
+  - *Obtención*: Descargar las consultas regionales o temáticas correspondientes (óxidos mayores de rocas ígneas) desde el portal oficial de [GEOROC](https://georoc.eu).
+- **INGEMMET** (*Instituto Geológico, Minero y Metalúrgico del Perú*): Base de Datos Litogeoquímica del Perú, publicada a través del sistema de información geológica y catastral minera [GEOCATMIN](https://geocatmin.ingemmet.gob.pe). Datos de libre acceso; el presente repositorio no redistribuye la base y debe citarse explícitamente a INGEMMET como fuente institucional.
+  - *Obtención*: Consultar y descargar las capas de litogeoquímica y geología a escala 1:100 000 mediante las herramientas de consulta y descarga de [GEOCATMIN](https://geocatmin.ingemmet.gob.pe).
+
+Los datos y modelos entrenados no se incluyen en el repositorio; para utilizarlos, sitúe los archivos obtenidos en la carpeta local `Dataset/` (excluida del control de versiones) o apunte la variable de entorno `GEONORMML_DATASET_PATH` a su copia local, y ejecute el pipeline reproducible documentado a continuación para regenerar los modelos y artefactos.
+
 ## Installation
 
 GeoNormML and GeoNormPy are sibling projects. Python 3.11 is the validated
@@ -147,7 +158,6 @@ their stage. Review them before running against a new dataset.
 ## Scientific documentation
 
 - [Dataset traceability](docs/dataset_traceability.md)
-- [Academic traceability](docs/dataset_traceability_academic.md)
 - [Modeling pipeline](docs/modeling_pipeline_bootstrap.md)
 - [Implemented petrological features](docs/implemented_petrological_features.md)
 - [Spatial features and SHAP](docs/implemented_spatial_features_and_shap.md)

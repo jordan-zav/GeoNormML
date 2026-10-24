@@ -41,7 +41,7 @@ WHITE = "FFFFFF"
 LINE = "D8D4CA"
 RED_LIGHT = "F4E4E0"
 
-MAP_PATH = PROJECT_ROOT / "docs" / "dataset filtrado.jpg"
+MAP_PATH = PROJECT_ROOT / "docs" / "dataset_filtrado.jpg"
 DASHBOARD_PATH = PROJECT_ROOT / "artifacts" / "dashboard_confiabilidad_actualizado.png"
 CIPW_VOL_PATH = (
     PROJECT_ROOT

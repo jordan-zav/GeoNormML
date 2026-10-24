@@ -34,7 +34,7 @@ if (!OUTPUT.exists) OUTPUT.create();
 if (!PREVIEW.exists) PREVIEW.create();
 if (!ASSETS.exists) ASSETS.create();
 
-var MAP_PATH = new File(ROOT.fsName + "/docs/dataset filtrado.jpg");
+var MAP_PATH = new File(ROOT.fsName + "/docs/dataset_filtrado.jpg");
 var DASH_PATH = new File(ROOT.fsName + "/artifacts/dashboard_confiabilidad_actualizado.png");
 var VOL_CIPW_PATH = new File(ROOT.fsName + "/artifacts/tas_comparison/concordancia_litologia_cipw_vol.png");
 var PLU_CIPW_PATH = new File(ROOT.fsName + "/artifacts/tas_comparison/concordancia_litologia_cipw_plu.png");

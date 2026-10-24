@@ -4,7 +4,7 @@
     "title": "GeoNormPy + GeoNormML\nCIPW reproducible para rocas ígneas",
     "authors": "Jordan Zavaleta",
     "affiliation": "Escuela Profesional de Ingeniería Geológica · Universidad Nacional de Ingeniería · Lima, Perú",
-    "hero_visual": "docs/dataset filtrado.jpg",
+    "hero_visual": "docs/dataset_filtrado.jpg",
     "hero_metrics": [{"value":"2 755","label":"muestras"},{"value":"19","label":"clases"},{"value":"PyPI","label":"desplegado"}],
     "intro": "GeoNormPy calcula CIPW. GeoNormML selecciona modelos por dominio litológico. Juntos convierten óxidos, minerales normativos y ML en un flujo abierto, trazable y auditable.",
     "method_steps": ["Curación", "CIPW", "Benchmark", "Modelo final"],
