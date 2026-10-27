@@ -2,6 +2,10 @@
 
 Fecha: 27 de octubre de 2026. Generación examinada: profiles_nested_v3_20261026.
 
+Seguimiento: la [comparación ampliada v4](comparacion_ampliada_20261027.md) ya
+ejecutó el catálogo y una búsqueda acotada de configuraciones. Los hallazgos de
+este documento se refieren a la ejecución v3, cuya evidencia se conserva.
+
 **Dictamen: resultados del experimento acotado verificados; comparación completa pendiente.** No se autoriza inferir superioridad global ni promover automáticamente los pesos. Esta auditoría no reentrena modelos ni modifica el plan congelado o los resultados anteriores.
 
 ## Hallazgos

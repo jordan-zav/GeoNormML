@@ -1,5 +1,12 @@
 # Catálogo de scripts
 
+inspect_expanded_inputs revisa cobertura antes de congelar el experimento.
+build_expanded_models.ps1 reserva como máximo dos turnos pesados y usa el lanzador
+existente. train_expanded_generation compara el catálogo ampliado con selección
+anidada y puntos de reanudación verificados; review_expanded_generation recalcula
+las métricas, comprueba particiones y pesos, y ejecuta controles de la configuración
+vigente en las mismas muestras. Consulte los [resultados y la decisión por dominio](../docs/revisiones/comparacion_ampliada_20261027.md).
+
 audit_candidate_generation verifica una ejecución existente sin entrenar:
 hashes, población, grupos, métricas OOF, selecciones, pesos y parámetros anteriores.
 Escribe evidencia en un archivo nuevo e informa las opciones del catálogo que

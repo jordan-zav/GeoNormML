@@ -31,6 +31,12 @@ normative mineral features, spatial context and reproducible model evaluation.
 
 ## Workflow at a glance
 
+The [expanded comparison and domain recommendations](docs/revisiones/comparacion_ampliada_20261027.md)
+now cover all three algorithms and eleven feature families, including a small
+nested hyperparameter search and separate spatial diagnostics. The expanded
+search does not demonstrate a general improvement or justify automatic promotion.
+XGBoost remains the volcanic reference family and RandomForest the plutonic one.
+
 The [new candidate generation](docs/revisiones/generacion_candidata_v3_20261026.md)
 compares all three GeoNormPy 1.1.0 profiles using nested grouped validation.
 Its selected models are volcanic RandomForest with oxide features and plutonic
@@ -38,8 +44,9 @@ XGBoost with Verma 2003 features. They remain experimental, with external
 validation pending; the current baseline remains unchanged.
 
 The [candidate audit](docs/revisiones/auditoria_candidatos_20261027.md) verifies
-the saved results but identifies incomplete benchmark coverage: SVM_PCA and nine
-configured feature families were not run. Hyperparameters were kept fixed.
+the saved v3 results but identifies its incomplete benchmark coverage: SVM_PCA
+and nine configured feature families were not run. That coverage limitation is
+addressed by the expanded comparison above; the historical v3 run remains unchanged.
 
 **GeoNormPy / GeoNormML Legacy** identifies the technical paper presented at the
 **XXIII Peruvian Geological Congress**. Its historical results remain separate

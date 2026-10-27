@@ -2,6 +2,12 @@
 
 # GeoNormML
 
+La [comparación ampliada por dominio](docs/revisiones/comparacion_ampliada_20261027.md)
+ya incluye los tres algoritmos, las once familias de variables y una búsqueda
+acotada de configuraciones dentro de la validación anidada. No demuestra una
+mejora general ni justifica promover automáticamente pesos nuevos. Se mantienen
+XGBoost como familia de referencia volcánica y RandomForest como plutónica.
+
 La [generación candidata actualizada](docs/revisiones/generacion_candidata_v3_20261026.md)
 compara los tres perfiles de GeoNormPy 1.1.0 mediante validación anidada por grupos.
 Selecciona RandomForest con óxidos para volcánicas y XGBoost con Verma 2003 para
@@ -9,8 +15,9 @@ plutónicas. Sigue experimental, pendiente de validación externa; la base vigen
 se conserva.
 
 La [auditoría de candidatos](docs/revisiones/auditoria_candidatos_20261027.md)
-verifica los resultados y documenta que faltaron SVM_PCA y nueve familias de
-variables. No se optimizaron hiperparámetros; la comparación completa sigue pendiente.
+verifica los resultados v3 y documenta que faltaron SVM_PCA y nueve familias de
+variables. La comparación ampliada aborda esa cobertura pendiente sin alterar
+la evidencia histórica de v3.
 
 **Aprendizaje automático informado por petrografía para geoquímica de roca total.**
 
