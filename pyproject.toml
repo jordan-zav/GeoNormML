@@ -22,6 +22,9 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+research = [
+    "catboost==1.2.10",
+]
 posters = [
     "python-pptx>=1.0",
     "qrcode>=7.0",

@@ -1,5 +1,9 @@
 # Comparación ampliada y recomendación por dominio
 
+Seguimiento: el [estudio v5](estabilidad_y_alternativas_20261027.md) amplía los
+algoritmos y evalúa semillas, número de folds y bloques geográficos. Este documento
+conserva los resultados y decisiones de la ronda v4.
+
 Fecha: 27 de octubre de 2026. Generación: expanded_nested_v4_20261027.
 
 **Recomendación: conservar XGBoost como familia de referencia volcánica y RandomForest como referencia plutónica. No promover automáticamente los pesos nuevos.** La búsqueda ampliada no demuestra una mejora general de clasificación. Para ensayos con contrato normativo actualizado quedaron dos candidatos trazables, separados de los modelos vigentes.

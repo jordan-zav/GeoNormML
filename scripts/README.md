@@ -1,5 +1,12 @@
 # Catálogo de scripts
 
+build_stability_models.ps1 reserva turnos y ejecuta train_stability_generation:
+siete familias, 34 configuraciones, tres semillas y sensibilidad a tres/cinco folds
+externos. La selección interna conserva tres folds. review_stability_generation
+recalcula puntuaciones y particiones, verifica hashes, ajusta controles geográficos
+emparejados y exporta figuras y candidatos de familia etiquetados post-hoc.
+Consulte [resultados, límites y recomendación por dominio](../docs/revisiones/estabilidad_y_alternativas_20261027.md).
+
 inspect_expanded_inputs revisa cobertura antes de congelar el experimento.
 build_expanded_models.ps1 reserva como máximo dos turnos pesados y usa el lanzador
 existente. train_expanded_generation compara el catálogo ampliado con selección

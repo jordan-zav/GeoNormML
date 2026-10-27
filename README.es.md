@@ -2,6 +2,13 @@
 
 # GeoNormML
 
+El [estudio de alternativas y sensibilidad a las particiones](docs/revisiones/estabilidad_y_alternativas_20261027.md)
+compara siete familias de algoritmos, tres semillas, tres frente a cinco folds
+externos y diagnósticos geográficos. ExtraTrees alcanza el mayor macro F1 medio
+entre las familias probadas, con diferencias pequeñas y límites importantes al
+bloquear geográficamente. Los pesos nuevos siguen experimentales; no se cambian
+los modelos predeterminados de producción.
+
 La [comparación ampliada por dominio](docs/revisiones/comparacion_ampliada_20261027.md)
 ya incluye los tres algoritmos, las once familias de variables y una búsqueda
 acotada de configuraciones dentro de la validación anidada. No demuestra una

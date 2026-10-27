@@ -31,6 +31,13 @@ normative mineral features, spatial context and reproducible model evaluation.
 
 ## Workflow at a glance
 
+The [model-alternative and partition-sensitivity study](docs/revisiones/estabilidad_y_alternativas_20261027.md)
+compares seven algorithm families, three partition seeds, three versus five outer
+folds, and fixed geographic-block diagnostics. ExtraTrees has the highest mean
+macro F1 among the tested families, with small differences and substantial limits
+under geographic blocking. New weights remain experimental; production defaults
+are unchanged.
+
 The [expanded comparison and domain recommendations](docs/revisiones/comparacion_ampliada_20261027.md)
 now cover all three algorithms and eleven feature families, including a small
 nested hyperparameter search and separate spatial diagnostics. The expanded

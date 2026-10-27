@@ -1,0 +1,5 @@
+-c constraints-py311.txt
+catboost==1.2.10
+graphviz==0.21
+narwhals==2.28.0
+plotly==7.1.0
