@@ -33,14 +33,17 @@ sus datos de entrenamiento no son una evaluación externa.
 
 ## Entorno de esta PC
 
-El entorno aislado vive en
-D:\DevResources\Projects\GeoNormML\py311.
-No es necesario activar ni modificar el Python global. Desde la raíz del
-repositorio, ejecutar los comandos a través del lanzador local:
+Cada equipo conserva su entorno aislado y sus lanzadores locales:
 
-    .\DEVRESOURCES_RUN.cmd D:\DevResources\Projects\GeoNormML\py311\Scripts\python.exe -m pytest -q
-    .\DEVRESOURCES_RUN.cmd D:\DevResources\Projects\GeoNormML\py311\Scripts\python.exe -m ruff check src scripts tests
-    .\DEVRESOURCES_RUN.cmd D:\DevResources\Projects\GeoNormML\py311\Scripts\python.exe -m pip check
+| Equipo | Intérprete comprobado |
+| --- | --- |
+| PC con código en O: | D:/DevResources/Projects/GeoNormML-11cc092a72/.venv/Scripts/python.exe |
+| Laptop con código en E: | D:/DevResources/Projects/GeoNormML/py311/Scripts/python.exe |
+
+Usa el intérprete del equipo actual mediante su DEVRESOURCES_RUN.cmd, cuando
+esté configurado. No modifiques el Python global ni traslades estas rutas a
+otra máquina como si fueran universales. En otro entorno aislado, instala
+requirements.txt desde la raíz del proyecto y ejecuta pytest, Ruff y pip check.
 
 El lanzador coordina los bloqueos y crea temporales propios en Sessions.
 requirements.txt instala el paquete, las herramientas de desarrollo y GeoNormPy;

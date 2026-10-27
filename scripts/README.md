@@ -7,10 +7,10 @@ y las rutas de los módulos se conservan para mantener los comandos existentes.
 
 | Módulo | Función |
 | --- | --- |
-| normalize_filtered_names | Normalización de nombres históricos |
-| apply_reclassification_to_master | Aplicación de la reclasificación al maestro |
-| apply_rock_type_and_cipw | Dominio de roca y resultados CIPW |
-| run_cipw_from_csv | Cálculo CIPW de una tabla CSV con GeoNormPy |
+| legacy/normalize_filtered_names | Normalización de nombres históricos |
+| legacy/apply_reclassification_to_master | Aplicación de la reclasificación al maestro |
+| legacy/apply_rock_type_and_cipw | Dominio de roca y resultados CIPW |
+| legacy/run_cipw_from_csv | Cálculo CIPW de una tabla CSV con GeoNormPy |
 | create_training_ready_dataset | Construcción de la tabla inicial de entrenamiento |
 | assign_final_ids | Asignación de IDs |
 | apply_quality_filter | Filtro geoquímico de la preparación histórica |
@@ -41,11 +41,23 @@ región. La validación espacial externa sigue siendo un requisito independiente
 | --- | --- |
 | generate_shap_plots | Explicación de los modelos realmente exportados |
 | generate_benchmark_figures | Figuras de comparación del benchmark |
-| generate_report_confusion_matrices | Matrices de confusión para informes |
+| legacy/generate_report_confusion_matrices | Matrices de confusión para informes |
 | generate_tas_comparison | Comparación TAS, CIPW y litología reportada |
 | generate_reliability_dashboard | Panel de evidencia de confiabilidad |
-| generate_dataset_cleanup_graphic | Ilustración de la depuración |
+| legacy/generate_dataset_cleanup_graphic | Ilustración de la depuración |
 
 Las explicaciones SHAP sobre muestras de entrenamiento no son métricas de
 validación. Consultar la [base vigente](../docs/revisiones/curated_baseline_correction_20260920.md)
 antes de reutilizar figuras históricas.
+
+## Comparación de perfiles CIPW
+
+- compare_cipw_profiles: experimento explícito que recalcula normas y ajusta
+  estimadores clonados; exige motor fuente y salida nueva. No sustituye modelos.
+- report_cipw_profile_comparison: verificación de predicciones e informe
+  histórico del experimento fechado; exige --output. No es un generador de
+  conclusiones para una base o evaluación distinta.
+
+Estos scripts no se ejecutan durante una revisión documental. Usa --help para
+consultar argumentos sin iniciar el experimento. Los scripts de legacy no son
+etapas activas del pipeline; consulta [su alcance](legacy/README.md).

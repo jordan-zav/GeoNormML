@@ -41,3 +41,7 @@ paper_geonormpy_geonormml_cpg.md está vacío; el borrador con contenido es
 Los enlaces absolutos antiguos a Google Drive documentan fuentes históricas;
 su disponibilidad en esta PC no está garantizada. No se trasladaron ni
 modificaron sus originales.
+
+## Integración entre equipos
+
+[Registro y comprobaciones](revisiones/integracion_dos_pc_20261026.md).

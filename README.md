@@ -1,8 +1,10 @@
+<p align="center"><strong>English</strong> · <a href="README.es.md">Español</a></p>
+
 <div align="center">
 
 # GeoNormML
 
-[Guía de trabajo en español](docs/GUIA_DE_TRABAJO.md) · [Índice de documentación](docs/README.md) · [Catálogo de scripts](scripts/README.md)
+[Work guide (Spanish)](docs/GUIA_DE_TRABAJO.md) · [Documentation index (Spanish)](docs/README.md) · [Script catalogue (Spanish)](scripts/README.md)
 
 **Petrographically informed machine learning for whole-rock geochemistry**
 
@@ -29,21 +31,21 @@ normative mineral features, spatial context and reproducible model evaluation.
 
 ## Workflow at a glance
 
-
-    Whole-rock analyses + petrographic labels + coordinates
-                             │
-                             ▼
-           Traceability review and quality filtering
-                             │
-                             ▼
-            GeoNormPy CIPW features + spatial features
-                             │
-                             ▼
-          Group-aware split ──► benchmark ──► final model
-                             │
-                             ▼
-            SHAP diagnostics + figures + export bundle
-
+~~~text
+Whole-rock analyses + petrographic labels + coordinates
+                         │
+                         ▼
+       Traceability review and quality filtering
+                         │
+                         ▼
+        GeoNormPy CIPW features + spatial features
+                         │
+                         ▼
+      Group-aware split ──► benchmark ──► final model
+                         │
+                         ▼
+        SHAP diagnostics + figures + export bundle
+~~~
 
 ## Capabilities
 
@@ -77,73 +79,76 @@ Generated datasets and models must retain the lineage of their input records.
 Spatial joins and CIPW values are derived features, not independent geological
 observations.
 
-## Fuentes de datos
+## Data sources
 
-Este repositorio **no incluye** las bases de datos originales, intermedias ni los modelos entrenados serializados, tanto por razones de almacenamiento y licencias como por trazabilidad de procedencia. Para reproducir los experimentos, los datos deben obtenerse directamente de sus fuentes primarias:
+Original datasets, intermediate tables and serialized trained models are not
+distributed in this repository. Obtain source data from their providers and
+retain query parameters, dates, source references and applicable terms.
 
-- **GEOROC** (*Geochemistry of Rocks of the Oceans and Continents*, DIGIS, Universidad de Göttingen): datos bajo la licencia [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). Al utilizar datos de GEOROC es obligatorio citar a GEOROC y las referencias originales de cada muestra individual según [https://georoc.mpch-mainz.gwdg.de/georoc/cite.asp](https://georoc.mpch-mainz.gwdg.de/georoc/cite.asp), y cualquier conjunto derivado se distribuye bajo la licencia CC BY-SA 4.0.
-  - *Obtención*: Descargar las consultas regionales o temáticas correspondientes (óxidos mayores de rocas ígneas) desde el portal oficial de [GEOROC](https://georoc.eu).
-- **INGEMMET** (*Instituto Geológico, Minero y Metalúrgico del Perú*): Base de Datos Litogeoquímica del Perú, publicada a través del sistema de información geológica y catastral minera [GEOCATMIN](https://geocatmin.ingemmet.gob.pe). Datos de libre acceso; el presente repositorio no redistribuye la base y debe citarse explícitamente a INGEMMET como fuente institucional.
-  - *Obtención*: Consultar y descargar las capas de litogeoquímica y geología a escala 1:100 000 mediante las herramientas de consulta y descarga de [GEOCATMIN](https://geocatmin.ingemmet.gob.pe).
+- [GEOROC](https://georoc.eu): database-query compilations use CC BY-SA 4.0.
+  Cite GEOROC and the original sample references; datasets in the separate
+  GEOROC Data Repository may have provider-specific terms. Follow the
+  [official citation and licensing guidance](https://georoc.eu/georoc/cite.asp).
+- [INGEMMET / GEOCATMIN](https://geocatmin.ingemmet.gob.pe): consult the
+  institutional lithogeochemical and geological data services, cite INGEMMET
+  and check the terms of the specific dataset. This repository does not
+  redistribute that database or grant rights to third-party data.
 
-Los datos y modelos entrenados no se incluyen en el repositorio; para utilizarlos, sitúe los archivos obtenidos en la carpeta local Dataset/ (excluida del control de versiones) o apunte la variable de entorno GEONORMML_DATASET_PATH a su copia local, y ejecute el pipeline reproducible documentado a continuación para regenerar los modelos y artefactos.
+Place authorized files in the ignored local Dataset directory or configure
+GEONORMML_DATASET_PATH. Regeneration is an explicit processing/training task,
+not a side effect of installing this package or merging these branches.
 
 ## Installation
 
-GeoNormML and GeoNormPy are sibling projects. Python 3.11 is the validated
-environment. This laptop uses an isolated environment at
-D:/DevResources/Projects/GeoNormML/py311.
-Run commands from this directory through DEVRESOURCES_RUN.cmd to select
-that interpreter, preserve workspace locks and create session temporaries:
-
-    DEVRESOURCES_RUN.cmd python -m pip check
-    DEVRESOURCES_RUN.cmd python -m pytest -q
-
-For another machine, create an isolated Python 3.11 environment under its local
-resource directory, then run:
+GeoNormML and GeoNormPy are sibling projects. Use an isolated Python 3.11
+environment under the resource directory configured for your machine:
 
     python -m pip install -r requirements.txt
     python -m pip check
     python -m pytest -q
 
-DEVRESOURCES_RUN.cmd is a local launcher and is not distributed in this repository.
+If this machine has DEVRESOURCES_RUN.cmd, run commands through that local
+launcher to preserve workspace locks and session-specific temporary paths.
+The launcher itself is not distributed. The [work guide](docs/GUIA_DE_TRABAJO.md)
+lists the environment locations used on the PC and laptop; do not copy one
+machine's path blindly to another.
 
-The reusable package can then be imported as geonormml. Full pipeline runs
+The reusable package can then be imported as <code>geonormml</code>. Full pipeline runs
 also require the private local datasets referenced by the project scripts.
 
-requirements.txt installs this project and resolves GeoNormPy from
-../GeoNormPy. constraints-py311.txt records the tested scientific dependencies.
+<code>requirements.txt</code> installs this project and resolves GeoNormPy from
+<code>../GeoNormPy</code>. <code>constraints-py311.txt</code> records the tested scientific dependencies.
 Use the latest GeoNormPy checkout: its packaging needs setuptools 77 or newer
 and an SPDX license expression without the obsolete license classifier.
 For core ML development without CIPW calculation, install with
-python -m pip install -c constraints-py311.txt -e ".[dev]".
+<code>python -m pip install -c constraints-py311.txt -e ".[dev]"</code>.
 
 ### Clean data and validate the baseline models
 
+~~~powershell
+python -m scripts.clean_dataset --input "<spatial v5.xlsx>" --reference "<curated v4.xlsx>"
+python -m scripts.build_modeling_artifacts
+python -m scripts.validate_models
+python -m scripts.export_official_models
+python -m scripts.generate_shap_plots
+~~~
 
-    python -m scripts.clean_dataset --input "<spatial v5.xlsx>" --reference "<curated v4.xlsx>"
-    python -m scripts.build_modeling_artifacts
-    python -m scripts.validate_models
-    python -m scripts.export_official_models
-    python -m scripts.generate_shap_plots
-
-
-Cleaning creates Dataset/Filtered/final/GeoNormML_training_curated.xlsx, a CSV,
+Cleaning creates <code>Dataset/Filtered/final/GeoNormML_training_curated.xlsx</code>, a CSV,
 spatial-repeat audit, retained-review table and SHA-256 manifest. It checks the
 reference workbook's IDs and original values before writing. By default no
 curated sample is removed for duplicate chemistry, conflicting labels or CIPW
-balance warnings. --policy restricted_experiment requires a separate output
+balance warnings. <code>--policy restricted_experiment</code> requires a separate output
 and cannot be reused as the official pipeline input. Cleaning never overwrites its input or an
-existing output. Set GEONORMML_DATASET_PATH to use another audited workbook;
-set GEONORMML_ARTIFACTS_DIR to redirect generated artifacts. Export defaults
-to the two geochemical baselines. --include-spatial adds experimental spatial
+existing output. Set <code>GEONORMML_DATASET_PATH</code> to use another audited workbook;
+set <code>GEONORMML_ARTIFACTS_DIR</code> to redirect generated artifacts. Export defaults
+to the two geochemical baselines. <code>--include-spatial</code> adds experimental spatial
 models, requiring separate geographic validation. Pipeline steps 8 and 9 now
 export first, then explain those exact models with SHAP.
 
 ### Clean working copy
 
 Keep source code, scientific documentation and conference materials in this
-repository. Keep Dataset/, generated artifacts/, virtual environments,
+repository. Keep <code>Dataset/</code>, generated <code>artifacts/</code>, virtual environments,
 caches, temporary reports and local credentials outside version control.
 GeoNormPy remains a separate sibling repository. Existing local training
 datasets and exports are not needed to build the Python package; they are
@@ -153,12 +158,12 @@ required to run the corresponding research stages.
 
 | Script | Purpose |
 | --- | --- |
-| scripts/run_pipeline.py | Coordinate the main processing stages |
-| scripts/create_training_ready_dataset.py | Build the modeling table |
-| scripts/run_ml_benchmark.py | Compare candidate models |
-| scripts/export_official_models.py | Export selected model artifacts |
-| scripts/generate_shap_plots.py | Produce model-interpretation figures |
-| scripts/generate_reliability_dashboard.py | Summarize reliability evidence |
+| <code>scripts/run_pipeline.py</code> | Coordinate the main processing stages |
+| <code>scripts/create_training_ready_dataset.py</code> | Build the modeling table |
+| <code>scripts/run_ml_benchmark.py</code> | Compare candidate models |
+| <code>scripts/export_official_models.py</code> | Export selected model artifacts |
+| <code>scripts/generate_shap_plots.py</code> | Produce model-interpretation figures |
+| <code>scripts/generate_reliability_dashboard.py</code> | Summarize reliability evidence |
 
 Individual scripts expose the exact local file arguments and assumptions for
 their stage. Review them before running against a new dataset.
@@ -175,10 +180,14 @@ their stage. Review them before running against a new dataset.
 
 | Path | Contents |
 | --- | --- |
-| src/geonormml | Reusable data, feature, split and modeling modules |
-| scripts | Preparation, modeling, evaluation and export commands |
-| docs | Methodology, provenance reviews and project reports |
-| poster_cpg23 | Conference-poster builders, configurations and previews |
+| <code>src/geonormml</code> | Reusable data, feature, split and modeling modules |
+| <code>scripts</code> | Preparation, modeling, evaluation and export commands |
+| <code>docs/metodologia</code> | Dataset provenance, features and processing methodology |
+| <code>docs/revisiones</code> | Baseline correction, audits and scientific decisions |
+| <code>docs/informes</code> | Historical project reports |
+| <code>docs/publicaciones</code> | Abstracts and manuscript drafts |
+| <code>docs/*.jpg</code> | Existing source illustrations used by the poster builders |
+| <code>poster_cpg23</code> | Conference-poster builders, configurations and previews |
 
 ## Project status
 
@@ -197,3 +206,22 @@ GeoNormML is distributed under the [GNU General Public License v3.0](LICENSE).
 
 Jordan Zavaleta — GisGeo Dev<br>
 [jordanzav@gisgeo.dev](mailto:jordanzav@gisgeo.dev) · [gisgeo.dev](https://gisgeo.dev)
+
+## CIPW profile comparison and two-machine integration
+
+The laptop contributes compare_cipw_profiles.py and report_cipw_profile_comparison.py.
+The first performs an explicit research experiment with new estimator fits;
+it is not a read-only validator and is not run on installation or merge.
+The second checks saved predictions and renders the dated 26 October report.
+It is not a generic report for arbitrary future experiments.
+
+Both commands expose --help. The comparison requires an explicit GeoNormPy
+source path and a new output directory; the report requires the completed
+experiment directory. Local data, splits and trusted model bundles are
+prerequisites and are not downloaded automatically.
+
+    python -m scripts.compare_cipw_profiles --help
+    python -m scripts.report_cipw_profile_comparison --help
+
+See the [integration record](docs/revisiones/integracion_dos_pc_20261026.md).
+No models were trained or replaced while integrating the branches.
