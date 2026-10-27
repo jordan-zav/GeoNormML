@@ -127,7 +127,9 @@ def clean_dataset(frame: pd.DataFrame, *, policy: str = CURATED_POLICY) -> tuple
     df["_invalid_numeric"] = bad_numeric
     if df.ID_Final.isna().any() or ((df.ID_Final % 1) != 0).any():
         raise ValueError("ID_Final must contain nonmissing integer identifiers.")
-    df["ID_Final"] = df.ID_Final.astype(int)
+    # Python's native integer maps to int32 on some Windows environments.
+    # Keep workbook IDs stable across platforms and reference comparisons.
+    df["ID_Final"] = df.ID_Final.astype("int64")
     repeated_rows = df[df.duplicated("ID_Final", keep="first")].copy()
     repeated_rows["QC_Reason"] = "spatial_join_duplicate"
     df = collapse_spatial_matches(df, SPATIAL)

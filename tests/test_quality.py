@@ -166,3 +166,22 @@ def test_reference_validation_records_full_preservation(samples, tmp_path):
     report = write_clean_dataset(source, output, reference=source)
     assert report["curated_reference"]["all_ids_and_original_values_preserved"]
     assert report["curated_reference"]["rows"] == len(samples)
+
+
+def test_curated_ids_use_portable_int64(samples):
+    samples["ID_Final"] = samples.ID_Final.astype("int32")
+    clean, _, _ = clean_dataset(samples)
+    assert clean.ID_Final.dtype == np.dtype("int64")
+    assert clean.ID_Final.tolist() == samples.ID_Final.tolist()
+
+
+def test_reference_validation_rejects_changed_measurements(samples, tmp_path):
+    source = tmp_path / "source.xlsx"
+    reference = tmp_path / "reference.xlsx"
+    samples.to_excel(reference, sheet_name="training_ready_final", index=False)
+    samples.loc[0, "SiO2"] += 1
+    samples.to_excel(source, sheet_name="training_ready_final", index=False)
+    output = tmp_path / "curated.xlsx"
+    with pytest.raises(AssertionError):
+        write_clean_dataset(source, output, reference=reference)
+    assert not output.exists()

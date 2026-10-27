@@ -6,6 +6,7 @@ MUSA y PetroPyQAPF. El resultado principal es un PPTX completamente editable.
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 import sys
 
@@ -19,7 +20,7 @@ import qrcode
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-OUTPUT_DIR = Path(r"I:\GDrive\Projects\Papers\CPG XXIII\accepted\GEONORM")
+OUTPUT_DIR = Path(os.environ.get("GEONORMML_POSTER_OUTPUT_DIR", PROJECT_ROOT / "artifacts" / "posters" / "totem_v1"))
 OUTPUT_PATH = OUTPUT_DIR / "Totem_GeoNorm_v1.pptx"
 ASSET_DIR = OUTPUT_DIR / "assets"
 

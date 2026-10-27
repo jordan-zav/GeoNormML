@@ -26,11 +26,17 @@ var WHITE = "FFFFFF";
 var LINE = "D8D4CA";
 var SOFT_RED = "F4E4E0";
 
-var ROOT = new Folder("I:/GDrive/Projects/In Development/GeoNormML");
-var OUTPUT = new Folder("I:/GDrive/Projects/Papers/CPG XXIII/accepted/GEONORM");
+var ROOT = new File($.fileName).parent.parent;
+var outputOverride = $.getenv("GEONORMML_POSTER_OUTPUT_DIR");
+var OUTPUT = new Folder(outputOverride || (ROOT.fsName + "/artifacts/posters/illustrator"));
 var PREVIEW = new Folder(OUTPUT.fsName + "/preview_ai");
 var ASSETS = new Folder(OUTPUT.fsName + "/assets");
-if (!OUTPUT.exists) OUTPUT.create();
+function ensureOutputFolder(folder) {
+    if (folder.exists) return;
+    if (!folder.parent.exists) ensureOutputFolder(folder.parent);
+    if (!folder.create()) throw new Error("No se pudo crear la carpeta de salida: " + folder.fsName);
+}
+ensureOutputFolder(OUTPUT);
 if (!PREVIEW.exists) PREVIEW.create();
 if (!ASSETS.exists) ASSETS.create();
 

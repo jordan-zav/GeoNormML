@@ -2,6 +2,8 @@
 
 # GeoNormML
 
+[Guía de trabajo en español](docs/GUIA_DE_TRABAJO.md) · [Índice de documentación](docs/README.md) · [Catálogo de scripts](scripts/README.md)
+
 **Petrographically informed machine learning for whole-rock geochemistry**
 
 Build traceable rock-classification experiments from cleaned geochemical data,
@@ -21,27 +23,27 @@ normative mineral features, spatial context and reproducible model evaluation.
 > permissions and storage. The repository alone is not a pretrained classifier.
 
 > The official curated baseline contains **2,755 samples**. The
-> [baseline correction](docs/curated_baseline_correction_20260920.md) supersedes
+> [baseline correction](docs/revisiones/curated_baseline_correction_20260920.md) supersedes
 > the earlier 2,651-row filtering experiment. Remove spatial join repetitions,
 > preserve every curated sample ID and record additional checks as review warnings.
 
 ## Workflow at a glance
 
-```text
-Whole-rock analyses + petrographic labels + coordinates
-                         │
-                         ▼
-       Traceability review and quality filtering
-                         │
-                         ▼
-        GeoNormPy CIPW features + spatial features
-                         │
-                         ▼
-      Group-aware split ──► benchmark ──► final model
-                         │
-                         ▼
-        SHAP diagnostics + figures + export bundle
-```
+
+    Whole-rock analyses + petrographic labels + coordinates
+                             │
+                             ▼
+           Traceability review and quality filtering
+                             │
+                             ▼
+            GeoNormPy CIPW features + spatial features
+                             │
+                             ▼
+          Group-aware split ──► benchmark ──► final model
+                             │
+                             ▼
+            SHAP diagnostics + figures + export bundle
+
 
 ## Capabilities
 
@@ -84,58 +86,64 @@ Este repositorio **no incluye** las bases de datos originales, intermedias ni lo
 - **INGEMMET** (*Instituto Geológico, Minero y Metalúrgico del Perú*): Base de Datos Litogeoquímica del Perú, publicada a través del sistema de información geológica y catastral minera [GEOCATMIN](https://geocatmin.ingemmet.gob.pe). Datos de libre acceso; el presente repositorio no redistribuye la base y debe citarse explícitamente a INGEMMET como fuente institucional.
   - *Obtención*: Consultar y descargar las capas de litogeoquímica y geología a escala 1:100 000 mediante las herramientas de consulta y descarga de [GEOCATMIN](https://geocatmin.ingemmet.gob.pe).
 
-Los datos y modelos entrenados no se incluyen en el repositorio; para utilizarlos, sitúe los archivos obtenidos en la carpeta local `Dataset/` (excluida del control de versiones) o apunte la variable de entorno `GEONORMML_DATASET_PATH` a su copia local, y ejecute el pipeline reproducible documentado a continuación para regenerar los modelos y artefactos.
+Los datos y modelos entrenados no se incluyen en el repositorio; para utilizarlos, sitúe los archivos obtenidos en la carpeta local Dataset/ (excluida del control de versiones) o apunte la variable de entorno GEONORMML_DATASET_PATH a su copia local, y ejecute el pipeline reproducible documentado a continuación para regenerar los modelos y artefactos.
 
 ## Installation
 
 GeoNormML and GeoNormPy are sibling projects. Python 3.11 is the validated
-environment. From the GeoNormML directory:
+environment. This laptop uses an isolated environment at
+D:/DevResources/Projects/GeoNormML/py311.
+Run commands from this directory through DEVRESOURCES_RUN.cmd to select
+that interpreter, preserve workspace locks and create session temporaries:
 
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
-python -m pip check
-python -m pytest -q
-```
+    DEVRESOURCES_RUN.cmd python -m pip check
+    DEVRESOURCES_RUN.cmd python -m pytest -q
 
-The reusable package can then be imported as `geonormml`. Full pipeline runs
+For another machine, create an isolated Python 3.11 environment under its local
+resource directory, then run:
+
+    python -m pip install -r requirements.txt
+    python -m pip check
+    python -m pytest -q
+
+DEVRESOURCES_RUN.cmd is a local launcher and is not distributed in this repository.
+
+The reusable package can then be imported as geonormml. Full pipeline runs
 also require the private local datasets referenced by the project scripts.
 
-`requirements.txt` installs this project and resolves GeoNormPy from
-`../GeoNormPy`. `constraints-py311.txt` records the tested scientific dependencies.
+requirements.txt installs this project and resolves GeoNormPy from
+../GeoNormPy. constraints-py311.txt records the tested scientific dependencies.
 Use the latest GeoNormPy checkout: its packaging needs setuptools 77 or newer
 and an SPDX license expression without the obsolete license classifier.
 For core ML development without CIPW calculation, install with
-`python -m pip install -c constraints-py311.txt -e ".[dev]"`.
+python -m pip install -c constraints-py311.txt -e ".[dev]".
 
 ### Clean data and validate the baseline models
 
-```powershell
-python -m scripts.clean_dataset --input "<spatial v5.xlsx>" --reference "<curated v4.xlsx>"
-python -m scripts.build_modeling_artifacts
-python -m scripts.validate_models
-python -m scripts.export_official_models
-python -m scripts.generate_shap_plots
-```
 
-Cleaning creates `Dataset/Filtered/final/GeoNormML_training_curated.xlsx`, a CSV,
+    python -m scripts.clean_dataset --input "<spatial v5.xlsx>" --reference "<curated v4.xlsx>"
+    python -m scripts.build_modeling_artifacts
+    python -m scripts.validate_models
+    python -m scripts.export_official_models
+    python -m scripts.generate_shap_plots
+
+
+Cleaning creates Dataset/Filtered/final/GeoNormML_training_curated.xlsx, a CSV,
 spatial-repeat audit, retained-review table and SHA-256 manifest. It checks the
 reference workbook's IDs and original values before writing. By default no
 curated sample is removed for duplicate chemistry, conflicting labels or CIPW
-balance warnings. `--policy restricted_experiment` requires a separate output
+balance warnings. --policy restricted_experiment requires a separate output
 and cannot be reused as the official pipeline input. Cleaning never overwrites its input or an
-existing output. Set `GEONORMML_DATASET_PATH` to use another audited workbook;
-set `GEONORMML_ARTIFACTS_DIR` to redirect generated artifacts. Export defaults
-to the two geochemical baselines. `--include-spatial` adds experimental spatial
+existing output. Set GEONORMML_DATASET_PATH to use another audited workbook;
+set GEONORMML_ARTIFACTS_DIR to redirect generated artifacts. Export defaults
+to the two geochemical baselines. --include-spatial adds experimental spatial
 models, requiring separate geographic validation. Pipeline steps 8 and 9 now
 export first, then explain those exact models with SHAP.
 
 ### Clean working copy
 
 Keep source code, scientific documentation and conference materials in this
-repository. Keep `Dataset/`, generated `artifacts/`, virtual environments,
+repository. Keep Dataset/, generated artifacts/, virtual environments,
 caches, temporary reports and local credentials outside version control.
 GeoNormPy remains a separate sibling repository. Existing local training
 datasets and exports are not needed to build the Python package; they are
@@ -145,32 +153,32 @@ required to run the corresponding research stages.
 
 | Script | Purpose |
 | --- | --- |
-| `scripts/run_pipeline.py` | Coordinate the main processing stages |
-| `scripts/create_training_ready_dataset.py` | Build the modeling table |
-| `scripts/run_ml_benchmark.py` | Compare candidate models |
-| `scripts/export_official_models.py` | Export selected model artifacts |
-| `scripts/generate_shap_plots.py` | Produce model-interpretation figures |
-| `scripts/generate_reliability_dashboard.py` | Summarize reliability evidence |
+| scripts/run_pipeline.py | Coordinate the main processing stages |
+| scripts/create_training_ready_dataset.py | Build the modeling table |
+| scripts/run_ml_benchmark.py | Compare candidate models |
+| scripts/export_official_models.py | Export selected model artifacts |
+| scripts/generate_shap_plots.py | Produce model-interpretation figures |
+| scripts/generate_reliability_dashboard.py | Summarize reliability evidence |
 
 Individual scripts expose the exact local file arguments and assumptions for
 their stage. Review them before running against a new dataset.
 
 ## Scientific documentation
 
-- [Dataset traceability](docs/dataset_traceability.md)
-- [Modeling pipeline](docs/modeling_pipeline_bootstrap.md)
-- [Implemented petrological features](docs/implemented_petrological_features.md)
-- [Spatial features and SHAP](docs/implemented_spatial_features_and_shap.md)
-- [Final model decision](docs/feature_context_experiment_and_final_model_decision.md)
+- [Dataset traceability](docs/metodologia/dataset_traceability.md)
+- [Modeling pipeline](docs/metodologia/modeling_pipeline_bootstrap.md)
+- [Implemented petrological features](docs/metodologia/implemented_petrological_features.md)
+- [Spatial features and SHAP](docs/metodologia/implemented_spatial_features_and_shap.md)
+- [Final model decision](docs/revisiones/feature_context_experiment_and_final_model_decision.md)
 
 ## Repository map
 
 | Path | Contents |
 | --- | --- |
-| `src/geonormml` | Reusable data, feature, split and modeling modules |
-| `scripts` | Preparation, modeling, evaluation and export commands |
-| `docs` | Methodology, provenance reviews and project reports |
-| `poster_cpg23` | Conference-poster builders, configurations and previews |
+| src/geonormml | Reusable data, feature, split and modeling modules |
+| scripts | Preparation, modeling, evaluation and export commands |
+| docs | Methodology, provenance reviews and project reports |
+| poster_cpg23 | Conference-poster builders, configurations and previews |
 
 ## Project status
 
