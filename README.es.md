@@ -8,6 +8,10 @@ Selecciona RandomForest con óxidos para volcánicas y XGBoost con Verma 2003 pa
 plutónicas. Sigue experimental, pendiente de validación externa; la base vigente
 se conserva.
 
+La [auditoría de candidatos](docs/revisiones/auditoria_candidatos_20261027.md)
+verifica los resultados y documenta que faltaron SVM_PCA y nueve familias de
+variables. No se optimizaron hiperparámetros; la comparación completa sigue pendiente.
+
 **Aprendizaje automático informado por petrografía para geoquímica de roca total.**
 
 Construye experimentos trazables de clasificación a partir de análisis químicos,

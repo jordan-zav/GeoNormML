@@ -3,6 +3,10 @@
 Revisión cerrada el 27 de octubre de 2026. Identificador: profiles_nested_v3_20261026.
 Estado: candidate_internal_validation_external_pending. Los modelos vigentes y Legacy se conservan; esta generación no constituye una promoción a producción.
 
+La [auditoría posterior](auditoria_candidatos_20261027.md) confirma las métricas y
+precisa el alcance incompleto: faltaron SVM_PCA y nueve familias del catálogo.
+No hubo optimización de hiperparámetros y la selección varió entre folds.
+
 ## Protocolo y cobertura
 
 Se conservaron los 2.755 identificadores de la base curada. Se recalcularon los perfiles extended_cipw_v3, verma2003 y pruseth2009 con GeoNormPy 1.1.0. La comparación utiliza las 2.701 muestras elegibles comunes: 1.725 volcánicas y 976 plutónicas. Las restantes figuran en el registro de cobertura; no se borraron ni reclasificaron.

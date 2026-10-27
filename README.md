@@ -37,6 +37,10 @@ Its selected models are volcanic RandomForest with oxide features and plutonic
 XGBoost with Verma 2003 features. They remain experimental, with external
 validation pending; the current baseline remains unchanged.
 
+The [candidate audit](docs/revisiones/auditoria_candidatos_20261027.md) verifies
+the saved results but identifies incomplete benchmark coverage: SVM_PCA and nine
+configured feature families were not run. Hyperparameters were kept fixed.
+
 **GeoNormPy / GeoNormML Legacy** identifies the technical paper presented at the
 **XXIII Peruvian Geological Congress**. Its historical results remain separate
 from the current grouped-validation baseline. GeoNormPy 1.0.0 is also Legacy;

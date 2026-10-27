@@ -1,5 +1,10 @@
 # Catálogo de scripts
 
+audit_candidate_generation verifica una ejecución existente sin entrenar:
+hashes, población, grupos, métricas OOF, selecciones, pesos y parámetros anteriores.
+Escribe evidencia en un archivo nuevo e informa las opciones del catálogo que
+no se ejecutaron. No confundir comprobación de resultados con benchmark completo.
+
 train_candidate_generation compara tres perfiles normativos y controles de óxidos
 mediante selección anidada por grupos. Escribe únicamente una carpeta nueva de
 candidatos; no sustituye los modelos vigentes. prepare_candidate_transfer genera
