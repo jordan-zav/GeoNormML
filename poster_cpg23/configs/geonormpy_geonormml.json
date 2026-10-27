@@ -8,7 +8,7 @@
       "kind": "title",
       "body": "Suite abierta y reproducible para transformar óxidos mayores en mineralogía normativa CIPW y apoyar la denominación litológica. GeoNormPy ya está desplegado en PyPI: pip install geonormpy.",
       "caption": "Arquitectura general GeoNormPy–GeoNormML",
-      "visual": "docs/diagrama.jpg"
+      "visual": "docs/figuras/diagrama.jpg"
     },
     {
       "kind": "context",
@@ -20,7 +20,7 @@
         "Seleccionar modelos por dominio litológico y coherencia petrológica."
       ],
       "caption": "Distribución geográfica del dataset depurado",
-      "visual": "docs/dataset filtrado.jpg"
+      "visual": "docs/figuras/dataset filtrado.jpg"
     },
     {
       "kind": "method",
@@ -28,7 +28,7 @@
       "body": "El rigor metodológico se sustenta en una cadena trazable, desde la curación hasta la comparación de modelos mediante validación cruzada estratificada de cinco pliegues.",
       "steps": ["Curación\nlitogeoquímica", "GeoNormPy\nCIPW", "GeoNormML\nbenchmarking", "Modelo\ntransferible"],
       "caption": "Diagrama de flujo documentado del ecosistema",
-      "visual": "docs/diagrama.jpg"
+      "visual": "docs/figuras/diagrama.jpg"
     },
     {
       "kind": "method",
@@ -36,7 +36,7 @@
       "body": "Dataset final: 2 755 muestras y 19 clases. Volcánicas: 1 764 muestras / 9 clases. Plutónicas: 991 muestras / 10 clases. Se evaluaron Random Forest, XGBoost y SVM con PCA.",
       "steps": ["oxides_core\nóxidos mayores", "cipw\nminerales normativos", "combined_core\nóxidos + CIPW", "Métricas\nCA · AUC · F1 · MCC"],
       "caption": "Cobertura espacial después de la depuración",
-      "visual": "docs/dataset filtrado.jpg"
+      "visual": "docs/figuras/dataset filtrado.jpg"
     },
     {
       "kind": "results",
@@ -78,8 +78,8 @@
         {"value": "CLI", "label": "uso reproducible"}
       ],
       "visuals": [
-        {"path": "docs/diagrama.jpg", "caption": "Flujo de salidas reproducibles"},
-        {"path": "docs/dataset filtrado.jpg", "caption": "Dataset regional curado"}
+        {"path": "docs/figuras/diagrama.jpg", "caption": "Flujo de salidas reproducibles"},
+        {"path": "docs/figuras/dataset filtrado.jpg", "caption": "Dataset regional curado"}
       ],
       "bullets": ["La suite no reemplaza el criterio geológico: entrega probabilidades, advertencias y trazabilidad para apoyar la interpretación petrológica."]
     },
@@ -94,7 +94,7 @@
         "La siguiente etapa es validación externa e integración con herramientas de clasificación petrológica digital."
       ],
       "caption": "Arquitectura del ecosistema GeoNormPy–GeoNormML",
-      "visual": "docs/diagrama.jpg"
+      "visual": "docs/figuras/diagrama.jpg"
     }
   ]
 }

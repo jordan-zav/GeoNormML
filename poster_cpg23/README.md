@@ -1,5 +1,13 @@
 # Sistema de pósteres — XXIII Congreso Peruano de Geología
 
+Las imágenes fuente de GeoNorm están en ../docs/figuras. Los tótems Python e
+Illustrator resuelven el repositorio desde el propio script y escriben por
+defecto en artifacts/posters, sin depender de una unidad de Google Drive.
+GEONORMML_POSTER_OUTPUT_DIR permite elegir otra salida. El generador general
+build_poster.py conserva su salida junto al JSON de configuración.
+Para instalar las dependencias opcionales de presentaciones, usar el extra
+posters del paquete en el entorno aislado del proyecto.
+
 Plantilla parametrizable para una serie de pósteres verticales de `1080 × 1920 px`
 (`19.05 × 33.86 cm` a 144 dpi). El generador crea un PPTX de hasta diez páginas
 por trabajo, con todos los textos, imágenes y métricas definidos en JSON; no hay

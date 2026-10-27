@@ -27,8 +27,8 @@ def build_preprocessor(
 ) -> ColumnTransformer:
     """Build a ColumnTransformer that imputes + encodes features.
 
-    Numeric columns are imputed with median; categorical columns are imputed
-    with the most frequent value and then one-hot encoded.
+    Numeric columns are imputed with median; categorical columns use an
+    explicit missing-value label and are then one-hot encoded.
     """
     categorical_columns = [
         col

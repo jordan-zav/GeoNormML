@@ -26,15 +26,21 @@ var WHITE = "FFFFFF";
 var LINE = "D8D4CA";
 var SOFT_RED = "F4E4E0";
 
-var ROOT = new Folder("I:/GDrive/Projects/In Development/GeoNormML");
-var OUTPUT = new Folder("I:/GDrive/Projects/Papers/CPG XXIII/accepted/GEONORM");
+var ROOT = new File($.fileName).parent.parent;
+var outputOverride = $.getenv("GEONORMML_POSTER_OUTPUT_DIR");
+var OUTPUT = new Folder(outputOverride || (ROOT.fsName + "/artifacts/posters/illustrator"));
 var PREVIEW = new Folder(OUTPUT.fsName + "/preview_ai");
 var ASSETS = new Folder(OUTPUT.fsName + "/assets");
-if (!OUTPUT.exists) OUTPUT.create();
+function ensureOutputFolder(folder) {
+    if (folder.exists) return;
+    if (!folder.parent.exists) ensureOutputFolder(folder.parent);
+    if (!folder.create()) throw new Error("No se pudo crear la carpeta de salida: " + folder.fsName);
+}
+ensureOutputFolder(OUTPUT);
 if (!PREVIEW.exists) PREVIEW.create();
 if (!ASSETS.exists) ASSETS.create();
 
-var MAP_PATH = new File(ROOT.fsName + "/docs/dataset filtrado.jpg");
+var MAP_PATH = new File(ROOT.fsName + "/docs/figuras/dataset filtrado.jpg");
 var DASH_PATH = new File(ROOT.fsName + "/artifacts/dashboard_confiabilidad_actualizado.png");
 var VOL_CIPW_PATH = new File(ROOT.fsName + "/artifacts/tas_comparison/concordancia_litologia_cipw_vol.png");
 var PLU_CIPW_PATH = new File(ROOT.fsName + "/artifacts/tas_comparison/concordancia_litologia_cipw_plu.png");

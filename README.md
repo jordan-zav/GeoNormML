@@ -1,6 +1,10 @@
+<p align="center"><strong>English</strong> · <a href="README.es.md">Español</a></p>
+
 <div align="center">
 
 # GeoNormML
+
+[Work guide (Spanish)](docs/GUIA_DE_TRABAJO.md) · [Documentation index (Spanish)](docs/README.md) · [Script catalogue (Spanish)](scripts/README.md)
 
 **Petrographically informed machine learning for whole-rock geochemistry**
 
@@ -21,13 +25,13 @@ normative mineral features, spatial context and reproducible model evaluation.
 > permissions and storage. The repository alone is not a pretrained classifier.
 
 > The official curated baseline contains **2,755 samples**. The
-> [baseline correction](docs/curated_baseline_correction_20260920.md) supersedes
+> [baseline correction](docs/revisiones/curated_baseline_correction_20260920.md) supersedes
 > the earlier 2,651-row filtering experiment. Remove spatial join repetitions,
 > preserve every curated sample ID and record additional checks as review warnings.
 
 ## Workflow at a glance
 
-```text
+~~~text
 Whole-rock analyses + petrographic labels + coordinates
                          │
                          ▼
@@ -41,7 +45,7 @@ Whole-rock analyses + petrographic labels + coordinates
                          │
                          ▼
         SHAP diagnostics + figures + export bundle
-```
+~~~
 
 ## Capabilities
 
@@ -78,53 +82,50 @@ observations.
 ## Installation
 
 GeoNormML and GeoNormPy are sibling projects. Python 3.11 is the validated
-environment. From the GeoNormML directory:
+environment. Create an isolated environment under your local development-resource
+directory and install requirements.txt from the GeoNormML directory. On this PC,
+the prepared interpreter is
+D:\DevResources\Projects\GeoNormML-11cc092a72\.venv\Scripts\python.exe.
+Use DEVRESOURCES_RUN.cmd to preserve the workspace locks and session-specific
+temporary directories; the [work guide](docs/GUIA_DE_TRABAJO.md) has the exact
+validation commands.
 
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
-python -m pip check
-python -m pytest -q
-```
-
-The reusable package can then be imported as `geonormml`. Full pipeline runs
+The reusable package can then be imported as <code>geonormml</code>. Full pipeline runs
 also require the private local datasets referenced by the project scripts.
 
-`requirements.txt` installs this project and resolves GeoNormPy from
-`../GeoNormPy`. `constraints-py311.txt` records the tested scientific dependencies.
+<code>requirements.txt</code> installs this project and resolves GeoNormPy from
+<code>../GeoNormPy</code>. <code>constraints-py311.txt</code> records the tested scientific dependencies.
 Use the latest GeoNormPy checkout: its packaging needs setuptools 77 or newer
 and an SPDX license expression without the obsolete license classifier.
 For core ML development without CIPW calculation, install with
-`python -m pip install -c constraints-py311.txt -e ".[dev]"`.
+<code>python -m pip install -c constraints-py311.txt -e ".[dev]"</code>.
 
 ### Clean data and validate the baseline models
 
-```powershell
+~~~powershell
 python -m scripts.clean_dataset --input "<spatial v5.xlsx>" --reference "<curated v4.xlsx>"
 python -m scripts.build_modeling_artifacts
 python -m scripts.validate_models
 python -m scripts.export_official_models
 python -m scripts.generate_shap_plots
-```
+~~~
 
-Cleaning creates `Dataset/Filtered/final/GeoNormML_training_curated.xlsx`, a CSV,
+Cleaning creates <code>Dataset/Filtered/final/GeoNormML_training_curated.xlsx</code>, a CSV,
 spatial-repeat audit, retained-review table and SHA-256 manifest. It checks the
 reference workbook's IDs and original values before writing. By default no
 curated sample is removed for duplicate chemistry, conflicting labels or CIPW
-balance warnings. `--policy restricted_experiment` requires a separate output
+balance warnings. <code>--policy restricted_experiment</code> requires a separate output
 and cannot be reused as the official pipeline input. Cleaning never overwrites its input or an
-existing output. Set `GEONORMML_DATASET_PATH` to use another audited workbook;
-set `GEONORMML_ARTIFACTS_DIR` to redirect generated artifacts. Export defaults
-to the two geochemical baselines. `--include-spatial` adds experimental spatial
+existing output. Set <code>GEONORMML_DATASET_PATH</code> to use another audited workbook;
+set <code>GEONORMML_ARTIFACTS_DIR</code> to redirect generated artifacts. Export defaults
+to the two geochemical baselines. <code>--include-spatial</code> adds experimental spatial
 models, requiring separate geographic validation. Pipeline steps 8 and 9 now
 export first, then explain those exact models with SHAP.
 
 ### Clean working copy
 
 Keep source code, scientific documentation and conference materials in this
-repository. Keep `Dataset/`, generated `artifacts/`, virtual environments,
+repository. Keep <code>Dataset/</code>, generated <code>artifacts/</code>, virtual environments,
 caches, temporary reports and local credentials outside version control.
 GeoNormPy remains a separate sibling repository. Existing local training
 datasets and exports are not needed to build the Python package; they are
@@ -134,33 +135,37 @@ required to run the corresponding research stages.
 
 | Script | Purpose |
 | --- | --- |
-| `scripts/run_pipeline.py` | Coordinate the main processing stages |
-| `scripts/create_training_ready_dataset.py` | Build the modeling table |
-| `scripts/run_ml_benchmark.py` | Compare candidate models |
-| `scripts/export_official_models.py` | Export selected model artifacts |
-| `scripts/generate_shap_plots.py` | Produce model-interpretation figures |
-| `scripts/generate_reliability_dashboard.py` | Summarize reliability evidence |
+| <code>scripts/run_pipeline.py</code> | Coordinate the main processing stages |
+| <code>scripts/create_training_ready_dataset.py</code> | Build the modeling table |
+| <code>scripts/run_ml_benchmark.py</code> | Compare candidate models |
+| <code>scripts/export_official_models.py</code> | Export selected model artifacts |
+| <code>scripts/generate_shap_plots.py</code> | Produce model-interpretation figures |
+| <code>scripts/generate_reliability_dashboard.py</code> | Summarize reliability evidence |
 
 Individual scripts expose the exact local file arguments and assumptions for
 their stage. Review them before running against a new dataset.
 
 ## Scientific documentation
 
-- [Dataset traceability](docs/dataset_traceability.md)
-- [Academic traceability](docs/dataset_traceability_academic.md)
-- [Modeling pipeline](docs/modeling_pipeline_bootstrap.md)
-- [Implemented petrological features](docs/implemented_petrological_features.md)
-- [Spatial features and SHAP](docs/implemented_spatial_features_and_shap.md)
-- [Final model decision](docs/feature_context_experiment_and_final_model_decision.md)
+- [Dataset traceability](docs/metodologia/dataset_traceability.md)
+- [Academic traceability](docs/metodologia/dataset_traceability_academic.md)
+- [Modeling pipeline](docs/metodologia/modeling_pipeline_bootstrap.md)
+- [Implemented petrological features](docs/metodologia/implemented_petrological_features.md)
+- [Spatial features and SHAP](docs/metodologia/implemented_spatial_features_and_shap.md)
+- [Final model decision](docs/revisiones/feature_context_experiment_and_final_model_decision.md)
 
 ## Repository map
 
 | Path | Contents |
 | --- | --- |
-| `src/geonormml` | Reusable data, feature, split and modeling modules |
-| `scripts` | Preparation, modeling, evaluation and export commands |
-| `docs` | Methodology, provenance reviews and project reports |
-| `poster_cpg23` | Conference-poster builders, configurations and previews |
+| <code>src/geonormml</code> | Reusable data, feature, split and modeling modules |
+| <code>scripts</code> | Preparation, modeling, evaluation and export commands |
+| <code>docs/metodologia</code> | Dataset provenance, features and processing methodology |
+| <code>docs/revisiones</code> | Baseline correction, audits and scientific decisions |
+| <code>docs/informes</code> | Historical project reports |
+| <code>docs/publicaciones</code> | Abstracts and manuscript drafts |
+| <code>docs/figuras</code> | Source illustrations used by the poster builders |
+| <code>poster_cpg23</code> | Conference-poster builders, configurations and previews |
 
 ## Project status
 
