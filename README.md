@@ -31,6 +31,12 @@ normative mineral features, spatial context and reproducible model evaluation.
 
 ## Workflow at a glance
 
+The [new candidate generation](docs/revisiones/generacion_candidata_v3_20261026.md)
+compares all three GeoNormPy 1.1.0 profiles using nested grouped validation.
+Its selected models are volcanic RandomForest with oxide features and plutonic
+XGBoost with Verma 2003 features. They remain experimental, with external
+validation pending; the current baseline remains unchanged.
+
 **GeoNormPy / GeoNormML Legacy** identifies the technical paper presented at the
 **XXIII Peruvian Geological Congress**. Its historical results remain separate
 from the current grouped-validation baseline. GeoNormPy 1.0.0 is also Legacy;

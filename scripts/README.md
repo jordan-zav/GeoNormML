@@ -1,5 +1,11 @@
 # Catálogo de scripts
 
+train_candidate_generation compara tres perfiles normativos y controles de óxidos
+mediante selección anidada por grupos. Escribe únicamente una carpeta nueva de
+candidatos; no sustituye los modelos vigentes. prepare_candidate_transfer genera
+el contrato de integración y verifica su reproducción con --check. Consulte el
+[protocolo y sus límites](../docs/revisiones/generacion_candidata_v3_20261026.md).
+
 audit_metric_protocols compara CV por filas y por grupos sobre entrenamiento y
 base completa, con los mismos óxidos, normas e hiperparámetros. Ajusta modelos
 temporales de diagnóstico; no los exporta ni modifica los artefactos vigentes.

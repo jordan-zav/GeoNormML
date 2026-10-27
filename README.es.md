@@ -2,6 +2,12 @@
 
 # GeoNormML
 
+La [generación candidata actualizada](docs/revisiones/generacion_candidata_v3_20261026.md)
+compara los tres perfiles de GeoNormPy 1.1.0 mediante validación anidada por grupos.
+Selecciona RandomForest con óxidos para volcánicas y XGBoost con Verma 2003 para
+plutónicas. Sigue experimental, pendiente de validación externa; la base vigente
+se conserva.
+
 **Aprendizaje automático informado por petrografía para geoquímica de roca total.**
 
 Construye experimentos trazables de clasificación a partir de análisis químicos,
