@@ -9,6 +9,7 @@ import pandas as pd
 from sklearn.base import clone
 from sklearn.preprocessing import LabelEncoder
 
+from geonormml.catalog import CURRENT_GENERATION, CURRENT_MODEL_SPECS, generation_catalog
 from geonormml.config import (
     ARTIFACTS_DIR,
     DATASET_SHEET,
@@ -29,20 +30,7 @@ MODELS_DIR = ARTIFACTS_DIR / "official_models"
 
 OFFICIAL_MODEL_SPECS = [
     # Geochemical baselines; external applicability still requires validation.
-    {
-        "domain_code": "VOL",
-        "domain_name": "volcanic",
-        "feature_set": "combined_core",
-        "model_name": "XGBoost",
-        "model_type": "geochemical_baseline",
-    },
-    {
-        "domain_code": "PLU",
-        "domain_name": "plutonic",
-        "feature_set": "combined_core",  # Oxides + CIPW in both domains.
-        "model_name": "RandomForest",
-        "model_type": "geochemical_baseline",
-    },
+    *(dict(spec) for spec in CURRENT_MODEL_SPECS),
     # Spatial experiments; no claim of geographic transferability.
     {
         "domain_code": "VOL",
@@ -93,6 +81,7 @@ def export_model(df: pd.DataFrame, spec: dict[str, str]) -> dict[str, object]:
         "estimator": estimator,
         "provenance": training_provenance(),
         "transfer_status": "official" if spec["model_type"] == "geochemical_baseline" else "experimental",
+        "generation_id": CURRENT_GENERATION if spec["model_type"] == "geochemical_baseline" else "spatial_experimental",
     }
 
     out_path = MODELS_DIR / f"{spec['domain_name']}__{spec['feature_set']}__{spec['model_name']}.joblib"
@@ -159,6 +148,8 @@ def main(*, geochemical_only: bool = True) -> None:
     manifest_df.to_csv(transfer / "models" / manifest_path.name, index=False, encoding="utf-8-sig")
     schema = {
         "project": "GeoNormML",
+        "generation_id": CURRENT_GENERATION,
+        "generation_catalog": generation_catalog(),
         "target_application": "PetroPyQAPF",
         "dataset": {"target_column": TARGET_COLUMN, "domain_column": ROCK_TYPE_COLUMN},
         "global_rules": {

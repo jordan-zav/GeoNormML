@@ -1,3 +1,5 @@
+> **Legacy — GeoNormPy / GeoNormML.** Documento histórico conservado. El trabajo fue presentado como trabajo técnico en el XXIII Congreso Peruano de Geología. Las decisiones y métricas vigentes se describen en [Legacy y baseline vigente](../revisiones/modelos_legacy_y_vigentes.md); no deben mezclarse con las cifras de este documento.
+
 # Experimento con Clase_SiO2 y Serie_Mag y decision final de modelo
 
 ## Objetivo

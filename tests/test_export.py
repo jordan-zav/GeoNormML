@@ -28,9 +28,13 @@ def test_transfer_schema_is_generated_from_the_exported_models(tmp_path, monkeyp
     root = tmp_path / "petropyqapf_transfer"
     schema = json.loads((root / "schemas/official_model_bundle.json").read_text())
     assert len(schema["official_models"]) == 2
+    assert schema["generation_id"] == "curated_grouped_v2"
+    legacy = schema["generation_catalog"]["generations"]["cpg_xxiii_legacy"]
+    assert legacy["status"] == "legacy" and not legacy["inference_available"]
     for spec in schema["official_models"]:
         assert not Path(spec["artifact_path"]).is_absolute()
         model = joblib.load(root / spec["artifact_path"])
         assert model["feature_columns"] == spec["required_columns"]
         assert model["classes"] == spec["classes"]
         assert model["domain_code"] == spec["domain_code"]
+        assert model["generation_id"] == schema["generation_id"]

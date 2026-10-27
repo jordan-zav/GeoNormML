@@ -46,8 +46,8 @@ var VOL_CIPW_PATH = new File(ROOT.fsName + "/artifacts/tas_comparison/concordanc
 var PLU_CIPW_PATH = new File(ROOT.fsName + "/artifacts/tas_comparison/concordancia_litologia_cipw_plu.png");
 var QR_PATH = new File(ASSETS.fsName + "/qr_geonormpy.png");
 
-var AI_PATH = new File(OUTPUT.fsName + "/Totem_GeoNorm_final_Arial.ai");
-var PDF_PATH = new File(OUTPUT.fsName + "/Totem_GeoNorm_final_Arial.pdf");
+var AI_PATH = new File(OUTPUT.fsName + "/Legacy_Totem_GeoNorm_CPG_XXIII.ai");
+var PDF_PATH = new File(OUTPUT.fsName + "/Legacy_Totem_GeoNorm_CPG_XXIII.pdf");
 
 function rgb(hex) {
     var c = new RGBColor();
@@ -183,7 +183,7 @@ function chartBar(layer, a, label, value, x, y, w, accent) {
 
 function page1(doc, layer, a) {
     base(layer, a, 1, "Trabajo técnico científico · E-3 Geociencias digitales: IA, modelamiento y geodatos", TEAL, 250, 630);
-    var approved = "GeoNormPy y GeoNormML: Un ecosistema abierto en Python e integración de algoritmos determinísticos para el cálculo normativo y clasificación de rocas ígneas en el Perú";
+    var approved = "LEGACY CPG XXIII — GeoNormPy y GeoNormML: Un ecosistema abierto en Python e integración de algoritmos determinísticos para el cálculo normativo y clasificación de rocas ígneas en el Perú";
     textBox(layer, a, approved, 112, 175, 894, 310, 29, NAVY, true, "left", 33);
     textBox(layer, a, "Geoquímica de roca total + norma CIPW + aprendizaje supervisado bajo una cadena reproducible.", 112, 518, 894, 54, 14, INK, false, "left", 17);
     placedImage(layer, a, DASH_PATH, 112, 625, 894, 500, 12, TEAL, PAPER_LIGHT);
@@ -407,6 +407,7 @@ function auditFonts(doc) {
 }
 
 function main() {
+    if ($.getenv("GEONORMML_ALLOW_LEGACY_POSTER") !== "1") throw new Error("Historical CPG generator. Set GEONORMML_ALLOW_LEGACY_POSTER=1; use current JSON configs for current results.");
     var required = [MAP_PATH, DASH_PATH, VOL_CIPW_PATH, PLU_CIPW_PATH, QR_PATH];
     for (var i = 0; i < required.length; i++) {
         if (!required[i].exists) throw new Error("Falta el recurso: " + required[i].fsName);

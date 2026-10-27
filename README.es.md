@@ -23,6 +23,18 @@ es la referencia oficial. Se eliminan repeticiones de uniones espaciales, se
 conservan los identificadores curados y se registran revisiones adicionales sin
 descartar muestras silenciosamente.
 
+**GeoNormPy / GeoNormML Legacy** identifica el trabajo técnico presentado en el
+**XXIII Congreso Peruano de Geología**. Se conservan sus resultados históricos.
+GeoNormPy 1.0.0 también se identifica como Legacy; la compatibilidad corregida
+de 1.1.0 no es idéntica al motor anterior. El baseline ML vigente conserva dos
+modelos combined_core, con evaluación por grupos y holdout reservado.
+[Referencia al trabajo técnico y cita del software](CITATION.cff) · [CPG XXIII](https://congresosgp.org.pe/).
+
+Consulta la [decisión de versiones y métricas](docs/revisiones/modelos_legacy_y_vigentes.md).
+
+La [comparación controlada](docs/revisiones/causas_metricas_20261026.md) reproduce
+el resumen Legacy y separa el efecto de agrupación, población y variables.
+
 ## Flujo de trabajo
 
 1. Reúne química, etiquetas petrográficas, coordenadas y procedencia.

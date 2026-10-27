@@ -1,0 +1,141 @@
+{
+  "generation_id": "curated_grouped_v2",
+  "dataset_sha256": "e57384afa323bebb3d18227e6071acce84699e27dd229c8b9635e62eed4b7ec9",
+  "rows": 2755,
+  "domain_counts": {
+    "VOL": 1764,
+    "PLU": 991
+  },
+  "class_count": 19,
+  "scope": "Grouped CV on training only; reserved holdout. No external spatial validation.",
+  "models": [
+    {
+      "domain_code": "VOL",
+      "domain_name": "volcanic",
+      "feature_set": "combined_core",
+      "model_name": "XGBoost",
+      "model_type": "geochemical_baseline",
+      "training_rows": 1410,
+      "holdout_rows": 354,
+      "cv": {
+        "CA": 0.7624113475177305,
+        "AUC_macro_ovr": 0.9375578834418314,
+        "MCC": 0.6453976513008159,
+        "F1_weighted": 0.750520389032277,
+        "F1_macro": 0.6437607169996028
+      },
+      "holdout": {
+        "accuracy": 0.7740112994350282,
+        "f1_macro": 0.7091790879174058
+      }
+    },
+    {
+      "domain_code": "PLU",
+      "domain_name": "plutonic",
+      "feature_set": "combined_core",
+      "model_name": "RandomForest",
+      "model_type": "geochemical_baseline",
+      "training_rows": 792,
+      "holdout_rows": 199,
+      "cv": {
+        "CA": 0.5505050505050505,
+        "AUC_macro_ovr": 0.8328462481415769,
+        "MCC": 0.44148387090028685,
+        "F1_weighted": 0.5076330954618362,
+        "F1_macro": 0.35840710632536715
+      },
+      "holdout": {
+        "accuracy": 0.5829145728643216,
+        "f1_macro": 0.3913702053117062
+      }
+    }
+  ],
+  "generation_catalog": {
+    "schema_version": 1,
+    "default_ml_generation": "curated_grouped_v2",
+    "generations": {
+      "cpg_xxiii_legacy": {
+        "label": "GeoNormPy / GeoNormML Legacy — CPG XXIII",
+        "status": "legacy",
+        "presentation": {
+          "event": "XXIII Congreso Peruano de Geología",
+          "contribution_type": "trabajo técnico",
+          "description_es": "Presentado como trabajo técnico en el XXIII Congreso Peruano de Geología.",
+          "description_en": "Presented as a technical paper at the XXIII Peruvian Geological Congress."
+        },
+        "dataset_rows": 2755,
+        "reported_models": [
+          {
+            "domain_code": "VOL",
+            "feature_set": "combined_core",
+            "model_name": "XGBoost"
+          },
+          {
+            "domain_code": "PLU",
+            "feature_set": "oxides_core",
+            "model_name": "RandomForest"
+          }
+        ],
+        "metric_source": "accepted_abstract",
+        "artifact_status": "original_congress_estimators_not_located",
+        "inference_available": false,
+        "warning": "Historical publication; current estimators must not be relabelled as the congress models."
+      },
+      "curated_grouped_v2": {
+        "label": "GeoNormML — baseline curado con validación por grupos",
+        "status": "current",
+        "dataset_rows": 2755,
+        "models": [
+          {
+            "domain_code": "VOL",
+            "domain_name": "volcanic",
+            "feature_set": "combined_core",
+            "model_name": "XGBoost",
+            "model_type": "geochemical_baseline"
+          },
+          {
+            "domain_code": "PLU",
+            "domain_name": "plutonic",
+            "feature_set": "combined_core",
+            "model_name": "RandomForest",
+            "model_type": "geochemical_baseline"
+          }
+        ],
+        "metric_source": "validation/baseline_validation.json",
+        "validation": "grouped_training_cv_and_reserved_holdout",
+        "geospatial_predictors": false,
+        "cipw_training_contract": {
+          "status": "historical_not_recorded",
+          "profile": null,
+          "engine_version": null,
+          "warning": "Do not replace stored normative features with another profile without revalidation."
+        }
+      }
+    },
+    "geonormpy": {
+      "previous_release": {
+        "label": "GeoNormPy Legacy",
+        "version": "1.0.0",
+        "status": "legacy"
+      },
+      "congress_advertised_release": "0.1.1",
+      "revised_code_version": "1.1.0",
+      "profiles": {
+        "extended_cipw_v3": {
+          "label": "Compatibilidad Legacy (corregida)",
+          "profile_version": "3.1",
+          "exact_previous_release": false
+        },
+        "verma2003": {
+          "label": "Verma 2003",
+          "profile_version": "1.0"
+        },
+        "pruseth2009": {
+          "label": "Pruseth 2009",
+          "profile_version": "1.0"
+        }
+      },
+      "new_profiles_ml_status": "experimental_not_promoted"
+    }
+  }
+}

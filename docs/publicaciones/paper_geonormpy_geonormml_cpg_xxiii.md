@@ -1,3 +1,5 @@
+> **Legacy — GeoNormPy / GeoNormML.** Documento histórico conservado. El trabajo fue presentado como trabajo técnico en el XXIII Congreso Peruano de Geología. Las decisiones y métricas vigentes se describen en [Legacy y baseline vigente](../revisiones/modelos_legacy_y_vigentes.md); no deben mezclarse con las cifras de este documento.
+
 # GeoNormPy y GeoNormML: ecosistema reproducible en Python para el cálculo normativo CIPW y la clasificación supervisada de rocas ígneas del Perú
 
 Jordan Zavaleta1

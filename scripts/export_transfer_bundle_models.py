@@ -8,6 +8,7 @@ import pandas as pd
 from sklearn.base import clone
 from sklearn.preprocessing import LabelEncoder
 
+from geonormml.catalog import CURRENT_GENERATION, generation_catalog, is_current_official_model
 from geonormml.config import (
     ARTIFACTS_DIR,
     DATASET_SHEET,
@@ -97,6 +98,19 @@ PIPELINE_POLICIES = {
 }
 
 
+def model_policy(domain_code, feature_set, model_name):
+    """A feature family alone does not make every fitted algorithm official."""
+    policy = dict(PIPELINE_POLICIES[feature_set])
+    if is_current_official_model(domain_code, feature_set, model_name):
+        return {"status": "official", "warning": "", "rationale": "Current grouped-validation baseline."}
+    if policy["status"] == "official":
+        policy.update(
+            status="secondary",
+            warning="Comparative model; not one of the two selected current baselines.",
+        )
+    return policy
+
+
 def export_bundle(df: pd.DataFrame, domain_code: str, feature_set_name: str, model_name: str) -> dict[str, object]:
     domain_df = df[df[ROCK_TYPE_COLUMN] == domain_code].copy()
     feature_columns = FEATURE_SETS[feature_set_name].columns
@@ -112,7 +126,7 @@ def export_bundle(df: pd.DataFrame, domain_code: str, feature_set_name: str, mod
     estimator.fit(X, y_encoded)
 
     domain_name = "volcanic" if domain_code == "VOL" else "plutonic"
-    policy = PIPELINE_POLICIES[feature_set_name]
+    policy = model_policy(domain_code, feature_set_name, model_name)
 
     bundle = {
         "domain_code": domain_code,
@@ -131,6 +145,7 @@ def export_bundle(df: pd.DataFrame, domain_code: str, feature_set_name: str, mod
         "label_encoder": label_encoder,
         "estimator": estimator,
         "transfer_status": policy["status"],
+        "generation_id": CURRENT_GENERATION if policy["status"] == "official" else "comparison_experiment",
         "transfer_warning": policy["warning"],
         "transfer_rationale": policy["rationale"],
     }
@@ -182,6 +197,7 @@ def main() -> None:
             {
                 "dataset_path": get_dataset_path().name,
                 "dataset_sheet": DATASET_SHEET,
+                "generation_catalog": generation_catalog(),
                 "models": exported_rows,
             },
             indent=2,

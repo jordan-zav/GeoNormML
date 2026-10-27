@@ -1,5 +1,15 @@
 # Catálogo de scripts
 
+audit_metric_protocols compara CV por filas y por grupos sobre entrenamiento y
+base completa, con los mismos óxidos, normas e hiperparámetros. Ajusta modelos
+temporales de diagnóstico; no los exporta ni modifica los artefactos vigentes.
+Los escenarios completos reutilizan el holdout y no son una nueva validación independiente.
+
+reconcile_publication verifica hashes de base y validación, contrasta las
+predicciones del holdout y produce un snapshot nuevo para publicación.
+No entrena ni sustituye modelos. Las identidades Legacy y vigente se describen
+en [la decisión de versiones](../docs/revisiones/modelos_legacy_y_vigentes.md).
+
 Ejecutar desde la raíz del repositorio con el entorno del proyecto. Los nombres
 y las rutas de los módulos se conservan para mantener los comandos existentes.
 

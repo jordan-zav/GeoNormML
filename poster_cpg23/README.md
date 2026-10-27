@@ -1,5 +1,18 @@
 # Sistema de pósteres — XXIII Congreso Peruano de Geología
 
+## Legacy y resultados vigentes
+
+El trabajo técnico presentado en el XXIII Congreso Peruano de Geología se
+conserva como GeoNormPy / GeoNormML Legacy. Los generadores de tótem v1 Python
+e Illustrator reproducen ese corte histórico y exigen la opción local
+GEONORMML_ALLOW_LEGACY_POSTER=1. Sus cifras no son los resultados vigentes.
+
+Las configuraciones geonorm_editorial.json y geonormpy_geonormml.json describen
+el baseline vigente. current_baseline.evidence.json conserva el snapshot
+contrastado con la validación local; separa CV de entrenamiento y holdout.
+La fuente de modelos y estados es src/geonormml/catalog.py. Consultar la
+[decisión de versiones](../docs/revisiones/modelos_legacy_y_vigentes.md).
+
 Las imágenes fuente de GeoNorm están en ../docs (dataset_filtrado.jpg y diagrama.jpg). Los tótems Python e
 Illustrator resuelven el repositorio desde el propio script y escriben por
 defecto en artifacts/posters, sin depender de una unidad de Google Drive.

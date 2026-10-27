@@ -31,6 +31,18 @@ normative mineral features, spatial context and reproducible model evaluation.
 
 ## Workflow at a glance
 
+**GeoNormPy / GeoNormML Legacy** identifies the technical paper presented at the
+**XXIII Peruvian Geological Congress**. Its historical results remain separate
+from the current grouped-validation baseline. GeoNormPy 1.0.0 is also Legacy;
+the corrected compatibility profile in 1.1.0 is not identical to that release.
+The current ML baseline retains two combined_core models with a reserved holdout.
+[Conference reference and software citation](CITATION.cff) · [CPG XXIII](https://congresosgp.org.pe/).
+
+See the [generation and metric decision](docs/revisiones/modelos_legacy_y_vigentes.md).
+
+The [controlled protocol comparison](docs/revisiones/causas_metricas_20261026.md)
+reproduces the Legacy abstract and distinguishes grouping, population and feature effects.
+
 ~~~text
 Whole-rock analyses + petrographic labels + coordinates
                          │

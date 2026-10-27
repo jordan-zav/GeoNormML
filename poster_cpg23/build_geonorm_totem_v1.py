@@ -21,7 +21,7 @@ import qrcode
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 OUTPUT_DIR = Path(os.environ.get("GEONORMML_POSTER_OUTPUT_DIR", PROJECT_ROOT / "artifacts" / "posters" / "totem_v1"))
-OUTPUT_PATH = OUTPUT_DIR / "Totem_GeoNorm_v1.pptx"
+OUTPUT_PATH = OUTPUT_DIR / "Legacy_Totem_GeoNorm_CPG_XXIII.pptx"
 ASSET_DIR = OUTPUT_DIR / "assets"
 
 W, H, DPI = 1080, 1920, 72
@@ -58,6 +58,7 @@ CIPW_PLU_PATH = (
 )
 
 APPROVED_TITLE = (
+    "LEGACY CPG XXIII — "
     "GeoNormPy y GeoNormML: Un ecosistema abierto en Python e integración "
     "de algoritmos determinísticos para el cálculo normativo y clasificación "
     "de rocas ígneas en el Perú"
@@ -690,6 +691,9 @@ def build_qr() -> Path:
 
 
 def main() -> Path:
+    if os.environ.get("GEONORMML_ALLOW_LEGACY_POSTER") != "1":
+        raise RuntimeError("Historical CPG generator: set GEONORMML_ALLOW_LEGACY_POSTER=1 explicitly. Use current JSON configs for current results.")
+
     required = [MAP_PATH, DASHBOARD_PATH, CIPW_VOL_PATH, CIPW_PLU_PATH]
     missing = [path for path in required if not path.exists()]
     if missing:

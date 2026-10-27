@@ -1,0 +1,233 @@
+{
+  "scope": "Controlled diagnostics on fixed curated chemistry and current hyperparameters; not a recreation of every historical experiment.",
+  "cipw_recalculated": false,
+  "models_exported": false,
+  "originals_unchanged": true,
+  "warning": "All-curated scenarios reuse the historical holdout and are not a new external or independent test.",
+  "random_state": 42,
+  "folds": 5,
+  "results": [
+    {
+      "domain": "VOL",
+      "feature_set": "combined_core",
+      "model": "XGBoost",
+      "population": "recorded_training",
+      "grouped": false,
+      "rows": 1410,
+      "accuracy": 0.8014184397163121,
+      "f1_macro": 0.7422345100086233,
+      "mcc": 0.7079438850813994,
+      "overlapping_groups_per_fold": [
+        29,
+        25,
+        31,
+        26,
+        25
+      ]
+    },
+    {
+      "domain": "VOL",
+      "feature_set": "combined_core",
+      "model": "XGBoost",
+      "population": "recorded_training",
+      "grouped": true,
+      "rows": 1410,
+      "accuracy": 0.7624113475177305,
+      "f1_macro": 0.6437607169996028,
+      "mcc": 0.6453976513008159,
+      "overlapping_groups_per_fold": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "current_cv_reproduced": true
+    },
+    {
+      "domain": "VOL",
+      "feature_set": "combined_core",
+      "model": "XGBoost",
+      "population": "all_curated_diagnostic",
+      "grouped": false,
+      "rows": 1764,
+      "accuracy": 0.8049886621315193,
+      "f1_macro": 0.7502724944049467,
+      "mcc": 0.7130564619244315,
+      "overlapping_groups_per_fold": [
+        42,
+        37,
+        34,
+        39,
+        38
+      ]
+    },
+    {
+      "domain": "VOL",
+      "feature_set": "combined_core",
+      "model": "XGBoost",
+      "population": "all_curated_diagnostic",
+      "grouped": true,
+      "rows": 1764,
+      "accuracy": 0.7630385487528345,
+      "f1_macro": 0.6448491023350532,
+      "mcc": 0.6470993541604573,
+      "overlapping_groups_per_fold": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "domain": "PLU",
+      "feature_set": "combined_core",
+      "model": "RandomForest",
+      "population": "recorded_training",
+      "grouped": false,
+      "rows": 792,
+      "accuracy": 0.547979797979798,
+      "f1_macro": 0.35510152258941935,
+      "mcc": 0.4389528197141205,
+      "overlapping_groups_per_fold": [
+        2,
+        3,
+        2,
+        3,
+        2
+      ]
+    },
+    {
+      "domain": "PLU",
+      "feature_set": "combined_core",
+      "model": "RandomForest",
+      "population": "recorded_training",
+      "grouped": true,
+      "rows": 792,
+      "accuracy": 0.5505050505050505,
+      "f1_macro": 0.35840710632536715,
+      "mcc": 0.44148387090028685,
+      "overlapping_groups_per_fold": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "current_cv_reproduced": true
+    },
+    {
+      "domain": "PLU",
+      "feature_set": "combined_core",
+      "model": "RandomForest",
+      "population": "all_curated_diagnostic",
+      "grouped": false,
+      "rows": 991,
+      "accuracy": 0.5681130171543896,
+      "f1_macro": 0.38834857573229176,
+      "mcc": 0.4654114036788702,
+      "overlapping_groups_per_fold": [
+        3,
+        4,
+        5,
+        4,
+        2
+      ]
+    },
+    {
+      "domain": "PLU",
+      "feature_set": "combined_core",
+      "model": "RandomForest",
+      "population": "all_curated_diagnostic",
+      "grouped": true,
+      "rows": 991,
+      "accuracy": 0.5771947527749748,
+      "f1_macro": 0.39037566870509904,
+      "mcc": 0.47620146086742904,
+      "overlapping_groups_per_fold": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "domain": "PLU",
+      "feature_set": "oxides_core",
+      "model": "RandomForest",
+      "population": "recorded_training",
+      "grouped": false,
+      "rows": 792,
+      "accuracy": 0.5631313131313131,
+      "f1_macro": 0.3711805845431552,
+      "mcc": 0.4574601596115223,
+      "overlapping_groups_per_fold": [
+        2,
+        3,
+        2,
+        3,
+        2
+      ]
+    },
+    {
+      "domain": "PLU",
+      "feature_set": "oxides_core",
+      "model": "RandomForest",
+      "population": "recorded_training",
+      "grouped": true,
+      "rows": 792,
+      "accuracy": 0.5631313131313131,
+      "f1_macro": 0.3594124178561729,
+      "mcc": 0.45694300600361076,
+      "overlapping_groups_per_fold": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "domain": "PLU",
+      "feature_set": "oxides_core",
+      "model": "RandomForest",
+      "population": "all_curated_diagnostic",
+      "grouped": false,
+      "rows": 991,
+      "accuracy": 0.5812310797174571,
+      "f1_macro": 0.3861599562699267,
+      "mcc": 0.48152126881707097,
+      "overlapping_groups_per_fold": [
+        3,
+        4,
+        5,
+        4,
+        2
+      ]
+    },
+    {
+      "domain": "PLU",
+      "feature_set": "oxides_core",
+      "model": "RandomForest",
+      "population": "all_curated_diagnostic",
+      "grouped": true,
+      "rows": 991,
+      "accuracy": 0.5751765893037336,
+      "f1_macro": 0.37400616318531815,
+      "mcc": 0.47278878575503697,
+      "overlapping_groups_per_fold": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "dataset_sha256": "e57384afa323bebb3d18227e6071acce84699e27dd229c8b9635e62eed4b7ec9",
+  "fit_count": 60,
+  "runner_sha256": "9b2be8a21d32e7d9379893be89af6f6f74aa6aa4b6bd00fef1d6824769c824aa",
+  "model_definition_sha256": "7a9a0cfbba7fd6d39eedb889322229900e45666677ba567bfc83de603746144e"
+}

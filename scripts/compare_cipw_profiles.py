@@ -27,6 +27,15 @@ def write_json(path, value):
     path.write_text(json.dumps(value, ensure_ascii=False, indent=2, allow_nan=False), encoding="utf-8")
 
 
+def calculation_error_status(error):
+    """Keep profile applicability separate from unexpected calculation errors."""
+    return (
+        "unsupported"
+        if getattr(error, "code", None) in {"unsupported_component", "unsupported_profile_oxide"}
+        else "error"
+    )
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--engine-source", required=True, type=Path)
@@ -160,7 +169,7 @@ def main():
                         )
                 except Exception as error:
                     entry.update(
-                        status="unsupported" if getattr(error, "code", None) == "unsupported_component" else "error",
+                        status=calculation_error_status(error),
                         error=str(error),
                         error_code=getattr(error, "code", type(error).__name__),
                     )

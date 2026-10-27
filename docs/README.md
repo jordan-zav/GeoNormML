@@ -1,5 +1,13 @@
 # Documentación de GeoNormML
 
+La [revisión controlada de las métricas](revisiones/causas_metricas_20261026.md)
+reconstruye el resumen Legacy y separa el efecto de grupos, población y variables.
+
+La [decisión Legacy y baseline vigente](revisiones/modelos_legacy_y_vigentes.md)
+es la referencia actual para modelos, métricas y alcance. El trabajo técnico
+presentado en el XXIII Congreso Peruano de Geología se conserva como
+GeoNormPy / GeoNormML Legacy.
+
 Empieza por la [guía de trabajo](GUIA_DE_TRABAJO.md) y la
 [rectificación de la base oficial](revisiones/curated_baseline_correction_20260920.md).
 La base vigente conserva 2.755 muestras; las cifras de informes anteriores

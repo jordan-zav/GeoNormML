@@ -1,3 +1,5 @@
+> **Legacy — GeoNormPy / GeoNormML.** Documento histórico conservado. El trabajo fue presentado como trabajo técnico en el XXIII Congreso Peruano de Geología. Las decisiones y métricas vigentes se describen en [Legacy y baseline vigente](../revisiones/modelos_legacy_y_vigentes.md); no deben mezclarse con las cifras de este documento.
+
 # GeoNormML y GeoNormPy: clasificación reproducible de rocas ígneas del Perú
 
 ## Estado actualizado al 14 de agosto de 2026
