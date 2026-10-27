@@ -59,6 +59,69 @@ Whole-rock analyses + petrographic labels + coordinates
         SHAP diagnostics + figures + export bundle
 ~~~
 
+## Current methodology and critical assessment
+
+The current reference uses a frozen 2,755-ID dataset with its hash and audit,
+separate lithological domains, and stratified grouped CV within the training
+partition. Groups capture known dependencies through laboratory identifiers and
+identical major chemistry. Imputation is fitted inside each training fold. Both
+deployed baselines use combined_core: XGBoost for VOL and RandomForest for PLU.
+These are reproducible references, not demonstrated optimal models.
+
+| Domain | CV / historical holdout samples | Grouped CV accuracy | CV macro F1 | Historical holdout accuracy |
+| --- | --- | --- | --- | --- |
+| VOL | 1,410 / 354 | 76.24% | 0.644 | 77.40% |
+| PLU | 792 / 199 | 55.05% | 0.358 | 58.29% |
+
+CV and holdout scores describe different evaluations; selecting the larger
+number misrepresents the evidence. The historical holdout has been inspected
+and reused in retrospective full-population diagnostics. Its scores remain
+historical evaluations of fixed models, not a fresh blind test for selecting
+or promoting alternatives.
+
+**Critique of the Legacy work and current conclusions:**
+
+- The Legacy abstract's row-wise CV is reproducible but permits related groups
+  across training and validation. On identical VOL training observations, it
+  yields 80.14% versus 76.24% with groups. This indicates optimism under that
+  protocol; it does not establish that every historical result is invalid.
+- On identical PLU observations and features, grouping changes 54.80% to 55.05%.
+  Population and feature changes contribute to the difference from the abstract.
+  Group leakage or a GeoNormPy failure is not an adequate main explanation.
+- PLU macro F1 of 0.358 requires class-level scrutiny. Global accuracy does not
+  establish reliable recognition of every lithology or justify attributing the
+  observed limit solely to an inherent geological cause.
+- Group controls do not establish complete spatial independence. Neither a map
+  nor a CV improvement demonstrates transfer to another region. Spatial models
+  remain experimental.
+- Better CIPW numerical closure does not establish improved ML predictions.
+  Historical training-profile provenance is incomplete and must be recorded
+  before changing the normative features supplied to a classifier.
+
+**Required protocol for the next generation; not yet executed:**
+
+1. Freeze population, groups, classes, CIPW profile and version, iron policy,
+   features, metrics and selection rules before comparing results.
+2. Compare oxides_core, combined_core and candidate profiles using identical
+   eligible observations and folds. Retain every input in coverage records and
+   explain exclusions from any common evaluation population.
+3. Select features and hyperparameters with inner grouped CV and estimate the
+   selection procedure with outer grouped CV. Keep learned preprocessing inside
+   each training fold.
+4. Report accuracy, macro F1, MCC, confusion and class coverage, with stability
+   across partitions. The existing single-seed diagnostic is not a significance
+   test or a complete uncertainty estimate.
+5. Obtain an independent evaluation uninspected during selection. Geographic
+   claims require separate regions or blocks and, where possible, external
+   sources. Do not relabel the already inspected holdout as blind.
+6. Promote only after evaluation, preserving model generations, results and
+   input contracts. Final refitting on all observations does not itself produce
+   a new validation score.
+
+[Evidence from the 60 controlled fits](docs/revisiones/causas_metricas_20261026.md)
+· [Grouped CV](https://scikit-learn.org/stable/modules/cross_validation.html#cross-validation-iterators-for-grouped-data)
+· [Separating selection and evaluation](https://scikit-learn.org/stable/auto_examples/model_selection/plot_nested_cross_validation_iris.html).
+
 ## Capabilities
 
 | Area | Included work |

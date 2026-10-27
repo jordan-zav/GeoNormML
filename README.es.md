@@ -35,6 +35,72 @@ Consulta la [decisión de versiones y métricas](docs/revisiones/modelos_legacy_
 La [comparación controlada](docs/revisiones/causas_metricas_20261026.md) reproduce
 el resumen Legacy y separa el efecto de agrupación, población y variables.
 
+## Metodología vigente y crítica
+
+La referencia actual es una base congelada de 2.755 IDs, con su hash y manifiesto,
+dos dominios separados y CV estratificada por grupos dentro del entrenamiento.
+Los grupos reúnen dependencias conocidas por identificadores de laboratorio y
+química mayor idéntica. La imputación se ajusta dentro de cada fold. Ambos
+baselines desplegados usan combined_core: XGBoost en VOL y RandomForest en PLU.
+Son referencias reproducibles; no se ha demostrado que sean las mejores
+alternativas posibles.
+
+| Dominio | Muestras en CV / holdout histórico | Exactitud CV por grupos | F1 macro CV | Exactitud holdout histórico |
+| --- | --- | --- | --- | --- |
+| VOL | 1.410 / 354 | 76,24 % | 0,644 | 77,40 % |
+| PLU | 792 / 199 | 55,05 % | 0,358 | 58,29 % |
+
+La CV y el holdout son evaluaciones diferentes: no se mezclan ni se elige la
+cifra mayor para representar el modelo. El holdout histórico ya se ha consultado
+y se reutilizó en diagnósticos retrospectivos sobre la base completa. Sus cifras
+se conservan como resultados históricos de modelos fijados; no constituyen una
+prueba ciega nueva para elegir o promocionar alternativas.
+
+**Crítica del trabajo Legacy y de las conclusiones actuales:**
+
+- La CV por filas del resumen Legacy es reproducible, pero permite grupos
+  relacionados entre entrenamiento y validación. En VOL, sobre el mismo
+  entrenamiento, da 80,14 % frente a 76,24 % por grupos. Es una señal de
+  optimismo bajo ese protocolo, no una prueba de que todas las cifras históricas
+  sean inválidas.
+- En PLU, agrupar cambia 54,80 % a 55,05 % con las mismas muestras y variables.
+  La diferencia respecto al resumen incluye población y selección de variables;
+  no corresponde explicarla principalmente por fuga de grupos ni por un fallo
+  de GeoNormPy.
+- El F1 macro plutónico de 0,358 exige revisar desempeño por clase. La exactitud
+  global no demuestra reconocimiento sólido de todas las litologías ni permite
+  atribuir el límite observado únicamente a una causa geológica.
+- Controlar estos grupos no elimina toda dependencia espacial. Ni el mapa ni
+  una mejora en CV demuestran transferencia a otra región. Los modelos espaciales
+  permanecen experimentales.
+- Los mejores cierres numéricos de perfiles CIPW nuevos no prueban una mejora ML.
+  La procedencia del perfil de entrenamiento histórico está incompleta: debe
+  registrarse antes de cambiar las normas consumidas por un clasificador.
+
+**Protocolo para la siguiente generación, todavía pendiente de ejecución:**
+
+1. Fijar población, grupos, clases, perfil y versión CIPW, política de hierro,
+   variables, métricas y criterios de selección antes de comparar resultados.
+2. Comparar oxides_core, combined_core y los perfiles candidatos sobre las mismas
+   observaciones elegibles y folds; conservar todas las filas en los registros
+   de cobertura y explicar cualquier exclusión de la evaluación común.
+3. Realizar selección de variables e hiperparámetros en CV interna por grupos y
+   estimar su rendimiento en CV externa por grupos. Mantener todo preprocesamiento
+   aprendido dentro del entrenamiento de cada fold.
+4. Informar exactitud, F1 macro, MCC, confusión y cobertura por clase, junto con
+   estabilidad entre particiones. La corrida de semilla única existente no es
+   una prueba de significancia ni una estimación completa de incertidumbre.
+5. Obtener una evaluación independiente sin consultar durante la selección;
+   para afirmaciones geográficas, usar regiones o bloques separados y, cuando
+   sea posible, fuentes externas. No volver a llamar ciego al holdout conocido.
+6. Promover un modelo solo tras esa evaluación y conservar versiones, resultados
+   y contrato de entrada. Un reajuste final con toda la base no genera por sí
+   mismo una nueva métrica de validación.
+
+[Evidencia de los 60 ajustes controlados](docs/revisiones/causas_metricas_20261026.md)
+· [CV con grupos](https://scikit-learn.org/stable/modules/cross_validation.html#cross-validation-iterators-for-grouped-data)
+· [Separación de selección y evaluación](https://scikit-learn.org/stable/auto_examples/model_selection/plot_nested_cross_validation_iris.html).
+
 ## Flujo de trabajo
 
 1. Reúne química, etiquetas petrográficas, coordenadas y procedencia.
