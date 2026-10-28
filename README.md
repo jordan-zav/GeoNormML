@@ -4,6 +4,8 @@
 
 # GeoNormML
 
+October 27 operational decision: PetroPyQAPF adopts the frozen v5 final selector outputs, volcanic HistGradientBoosting and plutonic RandomForest. Internal selection macro F1 is 0.635 / 0.389; external evaluation remains pending. Legacy is retained. See the [decision and limitations](docs/revisiones/adopcion_petropyqapf_v5_20261027.md); this does not replace the historical CPG XXIII results or establish external validity.
+
 [Work guide (Spanish)](docs/GUIA_DE_TRABAJO.md) · [Documentation index (Spanish)](docs/README.md) · [Script catalogue (Spanish)](scripts/README.md)
 
 **Petrographically informed machine learning for whole-rock geochemistry**

@@ -2,6 +2,8 @@
 
 # GeoNormML
 
+Decisión operativa del 27 de octubre: PetroPyQAPF adopta los pesos congelados de la selección final v5, HistGradientBoosting volcánico y RandomForest plutónico. Macro F1 interno del selector: 0,635 / 0,389; evaluación externa pendiente. Se conserva Legacy. Véase la [decisión y sus límites](docs/revisiones/adopcion_petropyqapf_v5_20261027.md); no reemplaza los resultados históricos del CPG XXIII ni acredita validez externa.
+
 El [estudio de alternativas y sensibilidad a las particiones](docs/revisiones/estabilidad_y_alternativas_20261027.md)
 compara siete familias de algoritmos, tres semillas, tres frente a cinco folds
 externos y diagnósticos geográficos. ExtraTrees alcanza el mayor macro F1 medio

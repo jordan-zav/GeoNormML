@@ -1,5 +1,7 @@
 # Documentación de GeoNormML
 
+La [adopción operativa v5 en PetroPyQAPF](revisiones/adopcion_petropyqapf_v5_20261027.md) conserva los pesos de la selección final, distingue la evidencia interna de la evaluación externa pendiente y mantiene Legacy como referencia histórica.
+
 La [revisión controlada de las métricas](revisiones/causas_metricas_20261026.md)
 reconstruye el resumen Legacy y separa el efecto de grupos, población y variables.
 
