@@ -1,5 +1,10 @@
 # Catálogo de scripts
 
+check_installed_pair.py comprueba el contrato CIPW hasta predicción sintética
+usando los dos wheels reales fuera de sus checkouts. Acepta --ml-wheel y
+--engine-wheel. No carga modelos ni datasets de investigación. Consultar
+[estado vigente](../docs/STATUS.es.md) para separar v5 de exportaciones históricas.
+
 build_stability_models.ps1 reserva turnos y ejecuta train_stability_generation:
 siete familias, 34 configuraciones, tres semillas y sensibilidad a tres/cinco folds
 externos. La selección interna conserva tres folds. review_stability_generation

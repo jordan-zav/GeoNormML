@@ -1,0 +1,3 @@
+# Optional paired checkout development; the runtime version must still be 1.1.0.
+-e ../GeoNormPy
+-r requirements.txt

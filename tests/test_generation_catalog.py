@@ -1,4 +1,4 @@
-from geonormml.catalog import CURRENT_GENERATION, LEGACY_GENERATION, generation_catalog
+from geonormml.catalog import CURRENT_GENERATION, LEGACY_GENERATION, OPERATIONAL_GENERATION, generation_catalog
 from scripts.export_transfer_bundle_models import model_policy
 
 
@@ -20,6 +20,27 @@ def test_legacy_engine_is_not_identical_to_corrected_compatibility_profile():
     assert engine["previous_release"]["version"] == "1.0.0"
     assert not engine["profiles"]["extended_cipw_v3"]["exact_previous_release"]
     assert engine["new_profiles_ml_status"] == "experimental_not_promoted"
+
+
+def test_operational_adoption_has_its_own_identity_and_does_not_relabel_exports():
+    catalog = generation_catalog()
+    assert "operational_adoption" not in catalog
+    catalog = generation_catalog(include_operational=True)
+    adoption = catalog["operational_adoption"]
+    assert adoption["generation_id"] == OPERATIONAL_GENERATION
+    assert catalog["default_ml_generation"] == CURRENT_GENERATION
+    assert not adoption["historical_export_defaults_changed"]
+    assert adoption["external_evaluation"] == "pending"
+    assert adoption["eligible_samples"] == {"VOL": 1725, "PLU": 976}
+    assert {m["domain_code"]: m["model_name"] for m in adoption["models"]} == {
+        "VOL": "HistGradientBoosting",
+        "PLU": "RandomForest",
+    }
+    plutonic = adoption["models"][1]
+    assert plutonic["engine_version"] == "1.1.0" and plutonic["cipw_profile"] == "verma2003"
+    adoption["models"][1]["cipw_profile"] = "corrupt"
+    restored = generation_catalog(include_operational=True)["operational_adoption"]
+    assert restored["models"][1]["cipw_profile"] == "verma2003"
 
 
 def test_catalog_callers_cannot_change_shared_generation_identity():

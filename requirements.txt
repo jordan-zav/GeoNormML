@@ -1,4 +1,3 @@
 # One dependency definition, with the validated environment constrained below.
 -c constraints-py311.txt
 -e .[dev]
--e ../GeoNormPy

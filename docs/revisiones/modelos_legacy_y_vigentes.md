@@ -1,4 +1,8 @@
-# GeoNormPy y GeoNormML: Legacy y baseline vigente
+# GeoNormPy y GeoNormML: Legacy y baseline histórico
+
+Nota del 2 de noviembre: este documento conserva la decisión histórica v2.
+La [adopción operativa v5](adopcion_petropyqapf_v5_20261027.md) es posterior.
+Consultar el [estado vigente](../STATUS.es.md) antes de describir despliegues.
 
 La [comparación controlada de protocolos](causas_metricas_20261026.md) reproduce
 las métricas del resumen Legacy y precisa las causas: la agrupación explica una

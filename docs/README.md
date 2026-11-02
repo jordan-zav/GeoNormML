@@ -1,12 +1,18 @@
 # Documentación de GeoNormML
 
+[Estado vigente y pendientes](STATUS.es.md) · [Current status](STATUS.md) ·
+[Preparación de evaluación externa](EXTERNAL_VALIDATION.md).
+
+[Integración versionada y comprobaciones del 2 de noviembre](revisiones/integracion_motor_20261102.md).
+
 La [adopción operativa v5 en PetroPyQAPF](revisiones/adopcion_petropyqapf_v5_20261027.md) conserva los pesos de la selección final, distingue la evidencia interna de la evaluación externa pendiente y mantiene Legacy como referencia histórica.
 
 La [revisión controlada de las métricas](revisiones/causas_metricas_20261026.md)
 reconstruye el resumen Legacy y separa el efecto de grupos, población y variables.
 
 La [decisión Legacy y baseline vigente](revisiones/modelos_legacy_y_vigentes.md)
-es la referencia actual para modelos, métricas y alcance. El trabajo técnico
+documenta la identidad histórica del baseline y sus métricas. Para la adopción
+operativa actual, consultar el estado vigente y la decisión v5. El trabajo técnico
 presentado en el XXIII Congreso Peruano de Geología se conserva como
 GeoNormPy / GeoNormML Legacy.
 

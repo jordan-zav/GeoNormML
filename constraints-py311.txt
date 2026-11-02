@@ -5,6 +5,7 @@ cycler==0.12.1
 et_xmlfile==2.0.0
 fonttools==4.65.0
 geopandas==1.1.4
+geonormpy==1.1.0
 joblib==1.5.3
 kiwisolver==1.5.1
 llvmlite==0.49.0

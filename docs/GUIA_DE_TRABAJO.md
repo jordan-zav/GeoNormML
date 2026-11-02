@@ -25,7 +25,9 @@ La versión de 2.887 filas contenía 132 repeticiones espaciales. La de 2.651
 filas es un experimento restrictivo. No sustituir la base oficial por ninguna
 de ellas ni descartar IDs por coincidencia química o advertencias CIPW.
 
-Las métricas vigentes están en artifacts/validation/baseline_validation.json.
+Las métricas del baseline histórico están en artifacts/validation/baseline_validation.json.
+La adopción operativa v5 y sus métricas internas se describen en
+[el estado vigente](STATUS.es.md) y la decisión del 27 de octubre.
 Antes de usarlas, comprobar que su hash del dataset coincide con el manifiesto
 y el archivo real. Validación por grupos de muestras no demuestra transferencia
 geográfica independiente. Los modelos exportados se reajustan con toda la base;
@@ -46,7 +48,9 @@ otra máquina como si fueran universales. En otro entorno aislado, instala
 requirements.txt desde la raíz del proyecto y ejecuta pytest, Ruff y pip check.
 
 El lanzador coordina los bloqueos y crea temporales propios en Sessions.
-requirements.txt instala el paquete, las herramientas de desarrollo y GeoNormPy;
+requirements.txt instala el paquete, las herramientas de desarrollo y GeoNormPy
+1.1.0 publicado, sin necesitar una carpeta vecina. requirements-local.txt permite
+trabajar con ambos checkouts editables y exige igualmente la versión 1.1.0;
 constraints-py311.txt fija las versiones científicas comprobadas.
 Para otra PC, crear un entorno bajo su raíz local de recursos e instalar
 requirements.txt desde este repositorio. La letra de unidad puede variar.

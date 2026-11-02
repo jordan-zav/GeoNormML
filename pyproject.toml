@@ -9,6 +9,7 @@ description = "Machine learning pipeline for petrographic rock classification us
 license = "GPL-3.0-or-later"
 requires-python = ">=3.10"
 dependencies = [
+    "geonormpy==1.1.0",
     "pandas>=2.2,<3",
     "openpyxl>=3.1",
     "numpy>=1.26,<3",

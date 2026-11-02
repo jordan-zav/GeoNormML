@@ -31,122 +31,72 @@ normative mineral features, spatial context and reproducible model evaluation.
 > the earlier 2,651-row filtering experiment. Remove spatial join repetitions,
 > preserve every curated sample ID and record additional checks as review warnings.
 
-## Workflow at a glance
+## Current operational state
 
-The [model-alternative and partition-sensitivity study](docs/revisiones/estabilidad_y_alternativas_20261027.md)
-compares seven algorithm families, three partition seeds, three versus five outer
-folds, and fixed geographic-block diagnostics. ExtraTrees has the highest mean
-macro F1 among the tested families, with small differences and substantial limits
-under geographic blocking. New weights remain experimental; production defaults
-are unchanged.
+The adopted application models are the frozen v5 outputs selected on 27 October:
+HistGradientBoosting balanced15 for volcanic rocks (12 features) and RandomForest
+reference_leaf3 for plutonic rocks (41 features). The plutonic contract uses
+GeoNormPy 1.1.0, Verma 2003 profile 1.0, fixed ferric fraction 0.15 and calcite as
+an explicit carbonate assumption. The apatite feature combines Ap and FAp.
+Coordinates are not predictors. The source population remains 2,755 curated IDs;
+1,725 volcanic and 976 plutonic observations belong to the common eligible set.
+The other 54 observations remain in the source and coverage records.
 
-The [expanded comparison and domain recommendations](docs/revisiones/comparacion_ampliada_20261027.md)
-now cover all three algorithms and eleven feature families, including a small
-nested hyperparameter search and separate spatial diagnostics. The expanded
-search does not demonstrate a general improvement or justify automatic promotion.
-XGBoost remains the volcanic reference family and RandomForest the plutonic one.
+| Evidence | VOL | PLU | Interpretation |
+| --- | --- | --- | --- |
+| Internal selector mean macro F1 | 0.635 | 0.389 | Selection procedure, not an external score of the final fitted binary |
+| Independent external evaluation | Pending | Pending | New, uninspected data required |
+| External probability calibration | Not demonstrated | Not demonstrated | Probabilities are not individual reliability estimates |
 
-The [new candidate generation](docs/revisiones/generacion_candidata_v3_20261026.md)
-compares all three GeoNormPy 1.1.0 profiles using nested grouped validation.
-Its selected models are volcanic RandomForest with oxide features and plutonic
-XGBoost with Verma 2003 features. They remain experimental, with external
-validation pending; the current baseline remains unchanged.
+The operational choice is documented in the
+[adoption decision](docs/revisiones/adopcion_petropyqapf_v5_20261027.md).
+Small differences between alternative algorithms do not demonstrate superiority.
+Plutonic predictions remain supporting information with important class-level
+limitations. Modal QAPF classification remains a separate formal workflow.
 
-The [candidate audit](docs/revisiones/auditoria_candidatos_20261027.md) verifies
-the saved v3 results but identifies its incomplete benchmark coverage: SVM_PCA
-and nine configured feature families were not run. That coverage limitation is
-addressed by the expanded comparison above; the historical v3 run remains unchanged.
+## Generations and historical evidence
 
-**GeoNormPy / GeoNormML Legacy** identifies the technical paper presented at the
-**XXIII Peruvian Geological Congress**. Its historical results remain separate
-from the current grouped-validation baseline. GeoNormPy 1.0.0 is also Legacy;
-the corrected compatibility profile in 1.1.0 is not identical to that release.
-The current ML baseline retains two combined_core models with a reserved holdout.
-[Conference reference and software citation](CITATION.cff) · [CPG XXIII](https://congresosgp.org.pe/).
+- **CPG XXIII Legacy:** the technical paper and its historical figures remain unchanged.
+- **curated_grouped_v2:** historical grouped baseline, volcanic XGBoost and
+  plutonic RandomForest, both combined_core. Its reserved holdout was later
+  inspected and included in subsequent final fits; it is not a fresh blind test.
+- **v3 and v4:** candidate and expanded nested comparisons. Their reports preserve
+  the population, selection space and limitations of each dated experiment.
+- **v5:** repeated partition/fold diagnostics and the explicit operational adoption
+  above. The final refit uses all eligible observations and creates no new
+  evaluation score.
 
-See the [generation and metric decision](docs/revisiones/modelos_legacy_y_vigentes.md).
+The historical export scripts and CURRENT_GENERATION constant retain their
+existing baseline identity for compatibility. The additive operational_adoption
+entry in generation_catalog(include_operational=True) identifies the adopted v5 application contract;
+installing this package does not copy private weights or change application models.
 
-The [controlled protocol comparison](docs/revisiones/causas_metricas_20261026.md)
-reproduces the Legacy abstract and distinguishes grouping, population and feature effects.
+See [current status and remaining work](docs/STATUS.md),
+[model-alternative study](docs/revisiones/estabilidad_y_alternativas_20261027.md),
+[expanded comparison](docs/revisiones/comparacion_ampliada_20261027.md), and
+[Legacy protocol analysis](docs/revisiones/causas_metricas_20261026.md).
+
+## Workflow and limits
 
 ~~~text
-Whole-rock analyses + petrographic labels + coordinates
-                         │
-                         ▼
-       Traceability review and quality filtering
-                         │
-                         ▼
-        GeoNormPy CIPW features + spatial features
-                         │
-                         ▼
-      Group-aware split ──► benchmark ──► final model
-                         │
-                         ▼
-        SHAP diagnostics + figures + export bundle
+Whole-rock chemistry + independent petrographic labels
+                 ? quality and provenance checks
+                 ? explicit GeoNormPy profile and iron policy
+                 ? grouped feature/model selection
+                 ? frozen artifact and input contract
+                 ? independent external evaluation (pending)
 ~~~
 
-## Current methodology and critical assessment
+Nested grouped comparisons and partition-sensitivity studies have already been
+executed. Their internal folds are not independent geological regions or an
+external test set. Better normative mass closure does not establish better rock
+classification. Keep preprocessing inside training folds, record class coverage
+and retain every original sample in traceability records.
 
-The current reference uses a frozen 2,755-ID dataset with its hash and audit,
-separate lithological domains, and stratified grouped CV within the training
-partition. Groups capture known dependencies through laboratory identifiers and
-identical major chemistry. Imputation is fitted inside each training fold. Both
-deployed baselines use combined_core: XGBoost for VOL and RandomForest for PLU.
-These are reproducible references, not demonstrated optimal models.
-
-| Domain | CV / historical holdout samples | Grouped CV accuracy | CV macro F1 | Historical holdout accuracy |
-| --- | --- | --- | --- | --- |
-| VOL | 1,410 / 354 | 76.24% | 0.644 | 77.40% |
-| PLU | 792 / 199 | 55.05% | 0.358 | 58.29% |
-
-CV and holdout scores describe different evaluations; selecting the larger
-number misrepresents the evidence. The historical holdout has been inspected
-and reused in retrospective full-population diagnostics. Its scores remain
-historical evaluations of fixed models, not a fresh blind test for selecting
-or promoting alternatives.
-
-**Critique of the Legacy work and current conclusions:**
-
-- The Legacy abstract's row-wise CV is reproducible but permits related groups
-  across training and validation. On identical VOL training observations, it
-  yields 80.14% versus 76.24% with groups. This indicates optimism under that
-  protocol; it does not establish that every historical result is invalid.
-- On identical PLU observations and features, grouping changes 54.80% to 55.05%.
-  Population and feature changes contribute to the difference from the abstract.
-  Group leakage or a GeoNormPy failure is not an adequate main explanation.
-- PLU macro F1 of 0.358 requires class-level scrutiny. Global accuracy does not
-  establish reliable recognition of every lithology or justify attributing the
-  observed limit solely to an inherent geological cause.
-- Group controls do not establish complete spatial independence. Neither a map
-  nor a CV improvement demonstrates transfer to another region. Spatial models
-  remain experimental.
-- Better CIPW numerical closure does not establish improved ML predictions.
-  Historical training-profile provenance is incomplete and must be recorded
-  before changing the normative features supplied to a classifier.
-
-**Required protocol for the next generation; not yet executed:**
-
-1. Freeze population, groups, classes, CIPW profile and version, iron policy,
-   features, metrics and selection rules before comparing results.
-2. Compare oxides_core, combined_core and candidate profiles using identical
-   eligible observations and folds. Retain every input in coverage records and
-   explain exclusions from any common evaluation population.
-3. Select features and hyperparameters with inner grouped CV and estimate the
-   selection procedure with outer grouped CV. Keep learned preprocessing inside
-   each training fold.
-4. Report accuracy, macro F1, MCC, confusion and class coverage, with stability
-   across partitions. The existing single-seed diagnostic is not a significance
-   test or a complete uncertainty estimate.
-5. Obtain an independent evaluation uninspected during selection. Geographic
-   claims require separate regions or blocks and, where possible, external
-   sources. Do not relabel the already inspected holdout as blind.
-6. Promote only after evaluation, preserving model generations, results and
-   input contracts. Final refitting on all observations does not itself produce
-   a new validation score.
-
-[Evidence from the 60 controlled fits](docs/revisiones/causas_metricas_20261026.md)
-· [Grouped CV](https://scikit-learn.org/stable/modules/cross_validation.html#cross-validation-iterators-for-grouped-data)
-· [Separating selection and evaluation](https://scikit-learn.org/stable/auto_examples/model_selection/plot_nested_cross_validation_iris.html).
+The next scientific step is a genuinely independent evaluation, following the
+[external evaluation plan](docs/EXTERNAL_VALIDATION.md), before any new claim of
+regional transfer or external calibration. No new research models were trained
+for the dependency and documentation update.
 
 ## Capabilities
 
@@ -201,7 +151,7 @@ not a side effect of installing this package or merging these branches.
 
 ## Installation
 
-GeoNormML and GeoNormPy are sibling projects. Use an isolated Python 3.11
+GeoNormML and GeoNormPy are separate projects. Use an isolated Python 3.11
 environment under the resource directory configured for your machine:
 
     python -m pip install -r requirements.txt
@@ -217,14 +167,16 @@ machine's path blindly to another.
 The reusable package can then be imported as <code>geonormml</code>. Full pipeline runs
 also require the private local datasets referenced by the project scripts.
 
-<code>requirements.txt</code> installs this project and resolves GeoNormPy from
-<code>../GeoNormPy</code>. <code>constraints-py311.txt</code> records the tested scientific dependencies.
-Use the latest GeoNormPy checkout: its packaging needs setuptools 77 or newer
-and an SPDX license expression without the obsolete license classifier.
-For core ML development without CIPW calculation, install with
-<code>python -m pip install -c constraints-py311.txt -e ".[dev]"</code>.
+requirements.txt installs this project and the released GeoNormPy 1.1.0.
+constraints-py311.txt records the tested scientific dependencies. No neighboring
+repository is required. For coordinated engine development, explicitly use
+requirements-local.txt with a GeoNormPy 1.1.0 checkout at ../GeoNormPy.
 
-### Clean data and validate the baseline models
+### Historical baseline pipeline
+
+These commands reproduce the historical baseline. They can prepare data, fit
+models and write outputs; they are not required to install or test the package.
+They do not perform the adopted v5 application integration.
 
 ~~~powershell
 python -m scripts.clean_dataset --input "<spatial v5.xlsx>" --reference "<curated v4.xlsx>"
@@ -251,7 +203,7 @@ export first, then explain those exact models with SHAP.
 Keep source code, scientific documentation and conference materials in this
 repository. Keep <code>Dataset/</code>, generated <code>artifacts/</code>, virtual environments,
 caches, temporary reports and local credentials outside version control.
-GeoNormPy remains a separate sibling repository. Existing local training
+GeoNormPy remains a separate, versioned dependency (1.1.0). A sibling checkout is optional; use requirements-local.txt only for paired development. Existing local training
 datasets and exports are not needed to build the Python package; they are
 required to run the corresponding research stages.
 

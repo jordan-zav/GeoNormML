@@ -12,7 +12,25 @@ jobs:
           python-version: '3.11'
           cache: pip
           cache-dependency-path: constraints-py311.txt
-      - run: python -m pip install -c constraints-py311.txt -e '.[dev]'
+      - name: Install the released normative engine and research package
+        run: python -m pip install -c constraints-py311.txt -e '.[dev]'
       - run: python -m pip check
       - run: python -m ruff check src scripts tests
-      - run: python -m pytest -q
+      - name: Test the suite including real CIPW to prediction integration
+        run: python -m pytest -q
+      - name: Build the research package and download the released engine wheel
+        run: |
+          python -m pip install build
+          python -m build --wheel
+          python -m pip download --no-deps --only-binary=:all: geonormpy==1.1.0 --dest dist
+      - name: Verify both wheels outside their source trees
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import subprocess
+          import sys
+          ml, = Path('dist').glob('geonormml-*.whl')
+          engine, = Path('dist').glob('geonormpy-*.whl')
+          subprocess.run([sys.executable, 'scripts/check_installed_pair.py',
+                          '--ml-wheel', str(ml), '--engine-wheel', str(engine)], check=True)
+          PY
