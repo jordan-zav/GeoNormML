@@ -108,9 +108,9 @@ La [guía del paquete instalado](docs/USAGE.es.md) explica rutas portables,
 registro de modelos, carga con contrato y predicción CSV por CLI o API Python.
 Incluye un ejemplo sintético completo y rechazos explícitos por fila.
 
-GeoNormML todavía no está publicado en PyPI. El candidato 0.1.0 y los pasos
-explícitos de publicación están en la [guía de preparación](docs/PUBLISHING.md).
-GeoNormPy 1.1.0, su dependencia, sí está publicado.
+Instala una versión publicada con python -m pip install geonormml==0.1.0.
+La [guía de publicación](docs/PUBLISHING.md) describe la comprobación de candidatos
+y la subida explícita. GeoNormPy 1.1.0 se instala como dependencia exacta.
 
 GeoNormML y GeoNormPy son repositorios separados. Python 3.11 es el entorno
 comprobado; prepara un entorno aislado usando los recursos existentes. El

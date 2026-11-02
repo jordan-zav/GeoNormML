@@ -3,8 +3,9 @@
 [Español](USAGE.es.md) · [Publication procedure](PUBLISHING.md)
 
 GeoNormML provides an installed command-line interface and Python prediction API.
-It remains a prepared PyPI candidate. Install the verified wheel directly until
-publication is explicitly authorized:
+Install a published release from PyPI, or use a verified wheel for candidate testing:
+
+    python -m pip install geonormml==0.1.0
 
     python -m pip install /path/to/geonormml-0.1.0-py3-none-any.whl
     geonormml --version

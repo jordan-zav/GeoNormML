@@ -1,7 +1,8 @@
 # GeoNormML: PyPI candidate and publication procedure
 
-Status: prepared, not published. The first candidate version is 0.1.0. Preparing
-or pushing this repository does not publish a package to PyPI.
+Release version: 0.1.0. Preparing or pushing this repository does not publish a
+package to PyPI. The explicit tagged publication workflow performs the upload;
+verify its final result and the PyPI project before announcing availability.
 
 ## What is distributed
 

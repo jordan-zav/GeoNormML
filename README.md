@@ -155,9 +155,9 @@ For portable paths, model registration, trusted loading and CSV prediction, see
 the [installed application guide](docs/USAGE.md). The CLI includes a complete
 synthetic example and the Python API preserves per-row rejection information.
 
-GeoNormML itself is not yet published on PyPI. The prepared 0.1.0 distribution
-and explicit publication procedure are documented in [PyPI preparation](docs/PUBLISHING.md).
-GeoNormPy 1.1.0, its dependency, is already published.
+Install a published release with python -m pip install geonormml==0.1.0.
+The [release procedure](docs/PUBLISHING.md) describes candidate checks and explicit
+publication. GeoNormPy 1.1.0 is installed as its exact dependency.
 
 GeoNormML and GeoNormPy are separate projects. Use an isolated Python 3.11
 environment under the resource directory configured for your machine:

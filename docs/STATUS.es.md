@@ -24,7 +24,7 @@ de hash/entorno, carga explícita de modelos de confianza, selección del contra
 de entrada, rechazos por fila y salida CSV. El ejemplo sintético se genera solo
 en una carpeta solicitada. Véase la [guía de uso](USAGE.es.md).
 
-El candidato PyPI 0.1.0 se prepara sin publicarlo. Incluye wheel y archivo fuente,
+La versión 0.1.0 se prepara y verifica antes de publicarla. Incluye wheel y archivo fuente,
 con controles para excluir datos y pesos privados. El workflow manual prepara
 artefactos por defecto; publicar exige una etiqueta de versión y publish=true.
 Antes de subirlo falta configurar o verificar el Trusted Publisher en la cuenta

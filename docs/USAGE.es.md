@@ -2,8 +2,10 @@
 
 [English](USAGE.md) · [Preparación para PyPI](PUBLISHING.md)
 
-La interfaz instalada es una CLI y una API Python. GeoNormML sigue como candidato
-preparado, todavía sin publicar. Instala el wheel verificado mientras tanto:
+La interfaz instalada es una CLI y una API Python. Instala una versión publicada
+desde PyPI, o un wheel verificado para probar un candidato:
+
+    python -m pip install geonormml==0.1.0
 
     python -m pip install RUTA/geonormml-0.1.0-py3-none-any.whl
     geonormml --version

@@ -12,7 +12,7 @@ pretrained classifier, application installer or private model weights. Installin
 it does not train a model or download those resources. PetroPyQAPF's operational
 v5 adoption is a separate application integration.
 
-After publication, installation will be:
+Installation:
 
     python -m pip install geonormml==0.1.0
 
