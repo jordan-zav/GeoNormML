@@ -60,6 +60,15 @@ jobs:
           subprocess.run([sys.executable, 'scripts/check_installed_pair.py',
                           '--ml-wheel', str(ml), '--engine-wheel', str(engine)], check=True)
           PY
+      - name: Install and exercise the actual application in an isolated environment
+        run: |
+          python -m venv --system-site-packages "${{ runner.temp }}/geonormml-app-env"
+          "${{ runner.temp }}/geonormml-app-env/bin/python" -m pip install --no-deps --ignore-installed dist/geonormml-*.whl dist/geonormpy-*.whl
+          python scripts/check_installed_app.py --python "${{ runner.temp }}/geonormml-app-env/bin/python" --output "${{ runner.temp }}/geonormml-app-check"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: geonormml-application-check
+          path: ${{ runner.temp }}/geonormml-app-check/installed-app-results.json
       - uses: actions/upload-artifact@v4
         with:
           name: geonormml-distributions

@@ -151,6 +151,10 @@ not a side effect of installing this package or merging these branches.
 
 ## Installation
 
+For portable paths, model registration, trusted loading and CSV prediction, see
+the [installed application guide](docs/USAGE.md). The CLI includes a complete
+synthetic example and the Python API preserves per-row rejection information.
+
 GeoNormML itself is not yet published on PyPI. The prepared 0.1.0 distribution
 and explicit publication procedure are documented in [PyPI preparation](docs/PUBLISHING.md).
 GeoNormPy 1.1.0, its dependency, is already published.

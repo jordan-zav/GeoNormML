@@ -50,7 +50,10 @@ dev = [
 Homepage = "https://github.com/jordan-zav/GeoNormML"
 Repository = "https://github.com/jordan-zav/GeoNormML"
 Issues = "https://github.com/jordan-zav/GeoNormML/issues"
-Documentation = "https://github.com/jordan-zav/GeoNormML/blob/main/docs/STATUS.md"
+Documentation = "https://github.com/jordan-zav/GeoNormML/blob/main/docs/USAGE.md"
+
+[project.scripts]
+geonormml = "geonormml.cli:main"
 
 [tool.setuptools]
 include-package-data = false

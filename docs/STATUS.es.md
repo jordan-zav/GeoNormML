@@ -19,6 +19,11 @@ de los pesos finales. Véase la [decisión operativa](revisiones/adopcion_petrop
 
 ## Qué se cerró técnicamente
 
+La CLI y la API Python incorporan rutas portables, manifiestos JSON, comprobación
+de hash/entorno, carga explícita de modelos de confianza, selección del contrato
+de entrada, rechazos por fila y salida CSV. El ejemplo sintético se genera solo
+en una carpeta solicitada. Véase la [guía de uso](USAGE.es.md).
+
 El candidato PyPI 0.1.0 se prepara sin publicarlo. Incluye wheel y archivo fuente,
 con controles para excluir datos y pesos privados. El workflow manual prepara
 artefactos por defecto; publicar exige una etiqueta de versión y publish=true.

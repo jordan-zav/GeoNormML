@@ -26,6 +26,11 @@ See the [adoption decision](revisiones/adopcion_petropyqapf_v5_20261027.md).
 
 ## Software integration
 
+The installed CLI and Python API now cover portable paths, JSON model manifests,
+SHA-256/environment checks, trusted loading, declared prepared-feature or chemical
+input, per-row rejection and CSV output. A fully synthetic example is generated
+on request outside the package. See the [application guide](USAGE.md).
+
 The 0.1.0 PyPI candidate is prepared separately from publication. Its wheel and
 source archive include public code and regression resources, with checks against
 private research files. The manual pypi.yml workflow prepares artifacts by default;

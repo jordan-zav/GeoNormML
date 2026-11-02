@@ -5,7 +5,7 @@ or pushing this repository does not publish a package to PyPI.
 
 ## What is distributed
 
-The wheel contains the reusable geonormml modules and package metadata. It
+The wheel contains the reusable geonormml modules, installed CLI and package metadata. It
 depends on released GeoNormPy 1.1.0. The source distribution adds research
 scripts, synthetic tests, selected documentation and the existing public
 publication-configuration fixtures needed by those tests.
@@ -14,6 +14,12 @@ Datasets, sample tables, trained weights, serialized estimators, credentials,
 machine-specific configuration and application installers are excluded.
 Research scripts are source-only tools; the wheel supplies no pretrained
 classifier and no automatic research training or private-data download.
+
+The [installed application guide](USAGE.md) covers portable paths, model
+manifests, trusted loading, API/CLI inference and the synthetic example.
+scripts/check_installed_app.py verifies the actual installed console command
+in a fresh environment, including paths with spaces, lexical IDs and existing
+output preservation. CI and candidate preparation both execute this check.
 
 ## Local candidate checks
 

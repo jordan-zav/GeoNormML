@@ -39,29 +39,60 @@ def check_metadata(metadata, version):
 
 
 def check_distribution(directory):
-    wheel, = directory.glob("geonormml-*.whl")
-    source, = directory.glob("geonormml-*.tar.gz")
+    (wheel,) = directory.glob("geonormml-*.whl")
+    (source,) = directory.glob("geonormml-*.tar.gz")
     with zipfile.ZipFile(wheel) as archive:
         if archive.testzip() is not None:
             raise ValueError("Corrupt wheel")
         check_names(archive.namelist())
-        metadata_path, = [p for p in archive.namelist() if p.endswith(".dist-info/METADATA")]
+        (metadata_path,) = [p for p in archive.namelist() if p.endswith(".dist-info/METADATA")]
         tree = ast.parse(archive.read("geonormml/_version.py").decode("utf-8"))
-        version, = [ast.literal_eval(node.value) for node in tree.body
-                    if isinstance(node, ast.Assign) and any(
-                        isinstance(target, ast.Name) and target.id == "__version__" for target in node.targets
-                    )]
+        (version,) = [
+            ast.literal_eval(node.value)
+            for node in tree.body
+            if isinstance(node, ast.Assign)
+            and any(isinstance(target, ast.Name) and target.id == "__version__" for target in node.targets)
+        ]
         check_metadata(email.message_from_bytes(archive.read(metadata_path)), version)
-        for module in ("catalog", "data", "expanded", "ml", "quality", "split"):
+        for module in (
+            "catalog",
+            "data",
+            "expanded",
+            "ml",
+            "quality",
+            "split",
+            "models",
+            "inference",
+            "paths",
+            "cli",
+            "examples",
+            "__main__",
+        ):
             archive.getinfo(f"geonormml/{module}.py")
+        (entry_points,) = [p for p in archive.namelist() if p.endswith(".dist-info/entry_points.txt")]
+        if "geonormml = geonormml.cli:main" not in archive.read(entry_points).decode("utf-8"):
+            raise ValueError("Missing installed console command")
     with tarfile.open(source) as archive:
         check_names(archive.getnames())
         prefix = f"geonormml-{version}/"
         required = (
-            "PKG-INFO", "pyproject.toml", "LICENSE", "CITATION.cff", "docs/PYPI_README.md",
-            "docs/PUBLISHING.md", "constraints-py311.txt", "src/geonormml/_version.py",
-            "scripts/check_distribution.py", "scripts/check_installed_pair.py",
-            "scripts/check_source_distribution.py", "tests/test_geonormpy_integration.py",
+            "PKG-INFO",
+            "pyproject.toml",
+            "LICENSE",
+            "CITATION.cff",
+            "docs/PYPI_README.md",
+            "docs/PUBLISHING.md",
+            "constraints-py311.txt",
+            "src/geonormml/_version.py",
+            "scripts/check_distribution.py",
+            "scripts/check_installed_pair.py",
+            "scripts/check_source_distribution.py",
+            "scripts/check_installed_app.py",
+            "tests/test_geonormpy_integration.py",
+            "tests/test_inference.py",
+            "tests/test_paths.py",
+            "docs/USAGE.md",
+            "docs/USAGE.es.md",
             "poster_cpg23/configs/current_baseline.evidence.json",
         )
         for name in required:
@@ -71,8 +102,7 @@ def check_distribution(directory):
         if f'version: "{version}"' not in citation.splitlines():
             raise ValueError("Citation version disagrees with distribution")
     sums = {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in (wheel, source)}
-    return {"version": version, "license": "GPL-3.0-or-later", "sha256": sums,
-            "private_research_files_included": False}
+    return {"version": version, "license": "GPL-3.0-or-later", "sha256": sums, "private_research_files_included": False}
 
 
 if __name__ == "__main__":
@@ -81,6 +111,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     result = check_distribution(args.directory)
     (args.directory / "SHA256SUMS.txt").write_text(
-        "".join(f"{digest}  {name}\n" for name, digest in sorted(result["sha256"].items())), encoding="ascii",
+        "".join(f"{digest}  {name}\n" for name, digest in sorted(result["sha256"].items())),
+        encoding="ascii",
     )
     print(json.dumps(result, indent=2))

@@ -32,6 +32,37 @@ This example reads metadata only. Historical export identities remain unchanged.
 For source-only research scripts, use the source distribution or repository and
 explicitly provide authorized input data and new output paths.
 
+## Installed command and prediction API
+
+The wheel installs the geonormml command. Its portable defaults use user-owned
+storage; data and artifacts never default to the Python installation directory.
+
+    geonormml paths
+    geonormml example --output "/my/work/new synthetic example"
+    geonormml inspect "/my/work/new synthetic example/manifest.json"
+    geonormml predict --model "/my/work/new synthetic example/manifest.json" --input "/my/work/new synthetic example/input.csv" --output "/my/work/predictions.csv" --id-column Sample_ID --trust-model
+
+The example generates invented chemistry and a DummyClassifier with arbitrary
+labels, not a geologically validated model. Existing outputs are preserved.
+For your own model, provide an explicit manifest recording its feature order,
+classes, domain, training-library versions and input contract. Inspection reads
+metadata and hashes without deserializing model objects. Loading joblib requires
+an explicitly trusted source.
+
+    import pandas as pd
+    from geonormml import load_model, predict
+    model = load_model("/my/work/new synthetic example/manifest.json", trusted=True)
+    samples = pd.read_csv("/my/work/new synthetic example/input.csv", dtype={"Sample_ID": str})
+    results = predict(samples, model, id_column="Sample_ID")
+
+Raw chemistry uses a declared, checked normative contract; historical models can
+consume prepared features without silently changing their CIPW profile. Every
+input row is retained, with explicit rejections and missing predictions where
+appropriate. No dataset or scientific model is selected automatically.
+
+See the [application guide](https://github.com/jordan-zav/GeoNormML/blob/main/docs/USAGE.md)
+for path configuration, metadata registration, supported chemistry and output fields.
+
 ## Scientific limits
 
 A CIPW norm is not measured modal mineralogy. Internal grouped validation does

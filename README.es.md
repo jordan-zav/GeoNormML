@@ -104,6 +104,10 @@ y entrenar son operaciones explícitas, no parte de esta integración.
 
 ## Preparación y ejecución
 
+La [guía del paquete instalado](docs/USAGE.es.md) explica rutas portables,
+registro de modelos, carga con contrato y predicción CSV por CLI o API Python.
+Incluye un ejemplo sintético completo y rechazos explícitos por fila.
+
 GeoNormML todavía no está publicado en PyPI. El candidato 0.1.0 y los pasos
 explícitos de publicación están en la [guía de preparación](docs/PUBLISHING.md).
 GeoNormPy 1.1.0, su dependencia, sí está publicado.

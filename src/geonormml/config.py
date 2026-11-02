@@ -5,8 +5,10 @@ import os
 import sys
 from pathlib import Path
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
-DATASET_DIR = PROJECT_ROOT / "Dataset" / "Filtered" / "final"
+from .paths import get_artifacts_dir, get_dataset_dir, get_home, get_project_root
+
+PROJECT_ROOT = get_project_root() or get_home()
+DATASET_DIR = get_dataset_dir()
 CLEAN_DATASET = DATASET_DIR / "GeoNormML_training_curated.xlsx"
 SPATIAL_DATASET = DATASET_DIR / "Merge_Filtered_training_ready_v5_spatial.xlsx"
 CONSISTENT_DATASET = DATASET_DIR / "Merge_Filtered_training_ready_v4_consistent.xlsx"
@@ -23,7 +25,7 @@ def get_dataset_path() -> Path:
 DATASET_PATH = get_dataset_path()  # Compatibility for external callers.
 DATASET_SHEET = os.getenv("GEONORMML_DATASET_SHEET", "training_ready_final")
 
-ARTIFACTS_DIR = Path(os.getenv("GEONORMML_ARTIFACTS_DIR", str(PROJECT_ROOT / "artifacts")))
+ARTIFACTS_DIR = get_artifacts_dir()
 SPLITS_DIR = ARTIFACTS_DIR / "splits"
 MANIFESTS_DIR = ARTIFACTS_DIR / "manifests"
 
