@@ -14,11 +14,15 @@ def get_home():
     if value := os.getenv("GEONORMML_HOME"):
         return _absolute(value)
     if sys.platform == "win32":
-        base = Path(os.getenv("LOCALAPPDATA", str(Path.home() / "AppData/Local")))
+        fallback = Path.home() / "AppData/Local"
+        base = Path(os.getenv("LOCALAPPDATA") or fallback)
     elif sys.platform == "darwin":
-        base = Path.home() / "Library/Application Support"
+        fallback = base = Path.home() / "Library/Application Support"
     else:
-        base = Path(os.getenv("XDG_DATA_HOME", str(Path.home() / ".local/share")))
+        fallback = Path.home() / ".local/share"
+        base = Path(os.getenv("XDG_DATA_HOME") or fallback)
+    if not base.is_absolute():
+        base = fallback
     return _absolute(base / "geonormml")
 
 

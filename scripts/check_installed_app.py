@@ -13,7 +13,11 @@ def main():
     parser.add_argument("--python", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
-    python = args.python.resolve(strict=True)
+    # Resolving a POSIX venv symlink would select the base interpreter and lose
+    # its sys.prefix. Preserve the invocation path used by the virtual environment.
+    python = args.python.expanduser().absolute()
+    if not python.is_file():
+        raise FileNotFoundError(python)
     root = args.output.resolve()
     root.mkdir(parents=True, exist_ok=False)
     env = os.environ.copy()

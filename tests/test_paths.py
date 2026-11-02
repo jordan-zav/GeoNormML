@@ -2,6 +2,8 @@
 
 from pathlib import Path
 
+import pytest
+
 from geonormml import paths
 
 
@@ -35,3 +37,26 @@ def test_explicit_paths_are_dynamic_and_absolute(tmp_path, monkeypatch):
     assert paths.get_project_root() == tmp_path / "research"
     assert paths.get_dataset_dir() == tmp_path / "research/Dataset/Filtered/final"
     assert isinstance(paths.get_models_dir(), Path)
+
+
+@pytest.mark.parametrize(
+    "platform,variable,suffix",
+    [
+        ("win32", "LOCALAPPDATA", "AppData/Local"),
+        ("linux", "XDG_DATA_HOME", ".local/share"),
+    ],
+)
+@pytest.mark.parametrize("value", ["", "relative-directory"])
+def test_empty_or_relative_system_data_roots_fall_back_to_user_home(
+    tmp_path,
+    monkeypatch,
+    platform,
+    variable,
+    suffix,
+    value,
+):
+    monkeypatch.delenv("GEONORMML_HOME", raising=False)
+    monkeypatch.setattr(paths.sys, "platform", platform)
+    monkeypatch.setattr(Path, "home", lambda: tmp_path)
+    monkeypatch.setenv(variable, value)
+    assert paths.get_home() == tmp_path / suffix / "geonormml"
