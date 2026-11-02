@@ -80,11 +80,11 @@ See [current status and remaining work](docs/STATUS.md),
 
 ~~~text
 Whole-rock chemistry + independent petrographic labels
-                 ? quality and provenance checks
-                 ? explicit GeoNormPy profile and iron policy
-                 ? grouped feature/model selection
-                 ? frozen artifact and input contract
-                 ? independent external evaluation (pending)
+                 -> quality and provenance checks
+                 -> explicit GeoNormPy profile and iron policy
+                 -> grouped feature/model selection
+                 -> frozen artifact and input contract
+                 -> independent external evaluation (pending)
 ~~~
 
 Nested grouped comparisons and partition-sensitivity studies have already been
