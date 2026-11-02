@@ -26,6 +26,13 @@ See the [adoption decision](revisiones/adopcion_petropyqapf_v5_20261027.md).
 
 ## Software integration
 
+The 0.1.0 PyPI candidate is prepared separately from publication. Its wheel and
+source archive include public code and regression resources, with checks against
+private research files. The manual pypi.yml workflow prepares artifacts by default;
+publication requires an explicit matching tag and publish=true. PyPI Trusted
+Publisher configuration must be verified in the owner's account before upload.
+See the [publication procedure](PUBLISHING.md).
+
 - GeoNormML declares geonormpy==1.1.0 in package metadata and constraints.
 - requirements.txt installs the released dependency without requiring a sibling
   checkout. requirements-local.txt provides paired editable development.

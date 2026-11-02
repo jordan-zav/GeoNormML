@@ -5,6 +5,9 @@
 
 [Integración versionada y comprobaciones del 2 de noviembre](revisiones/integracion_motor_20261102.md).
 
+[Candidato PyPI y procedimiento de publicación](PUBLISHING.md): preparar el
+paquete no equivale a publicarlo; el workflow usa publish=false por defecto.
+
 La [adopción operativa v5 en PetroPyQAPF](revisiones/adopcion_petropyqapf_v5_20261027.md) conserva los pesos de la selección final, distingue la evidencia interna de la evaluación externa pendiente y mantiene Legacy como referencia histórica.
 
 La [revisión controlada de las métricas](revisiones/causas_metricas_20261026.md)

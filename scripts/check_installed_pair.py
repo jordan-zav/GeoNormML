@@ -19,8 +19,10 @@ import sys
 sys.path[:0] = sys.argv[1:3]
 import geonormml
 import geonormpy
+from importlib.metadata import version
 assert geonormml.__file__.startswith(sys.argv[1]), geonormml.__file__
 assert geonormpy.__file__.startswith(sys.argv[2]), geonormpy.__file__
+assert geonormml.__version__ == version('geonormml')
 import pytest
 raise SystemExit(pytest.main([
     sys.argv[3], '-q', '--import-mode=importlib', '-c', sys.argv[4],

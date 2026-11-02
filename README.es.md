@@ -104,6 +104,10 @@ y entrenar son operaciones explícitas, no parte de esta integración.
 
 ## Preparación y ejecución
 
+GeoNormML todavía no está publicado en PyPI. El candidato 0.1.0 y los pasos
+explícitos de publicación están en la [guía de preparación](docs/PUBLISHING.md).
+GeoNormPy 1.1.0, su dependencia, sí está publicado.
+
 GeoNormML y GeoNormPy son repositorios separados. Python 3.11 es el entorno
 comprobado; prepara un entorno aislado usando los recursos existentes. El
 archivo requirements.txt instala el proyecto y GeoNormPy 1.1.0 publicado.

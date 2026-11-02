@@ -1,0 +1,18 @@
+include LICENSE CITATION.cff README.md README.es.md pyproject.toml
+include requirements.txt requirements-local.txt constraints-py311.txt
+recursive-include src/geonormml *.py
+recursive-include scripts *.py
+recursive-include tests *.py
+recursive-include docs *.md
+include poster_cpg23/configs/current_baseline.evidence.json
+include poster_cpg23/configs/geonorm_editorial.json
+include poster_cpg23/configs/geonormpy_geonormml.json
+include poster_cpg23/build_geonorm_totem_v1.py
+include poster_cpg23/build_geonorm_totem_illustrator.jsx
+prune Dataset
+prune artifacts
+prune .git
+prune .venv
+prune build
+prune dist
+global-exclude *.py[cod] __pycache__ AGENTS.md auth.json .env .env.*

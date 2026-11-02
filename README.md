@@ -151,6 +151,10 @@ not a side effect of installing this package or merging these branches.
 
 ## Installation
 
+GeoNormML itself is not yet published on PyPI. The prepared 0.1.0 distribution
+and explicit publication procedure are documented in [PyPI preparation](docs/PUBLISHING.md).
+GeoNormPy 1.1.0, its dependency, is already published.
+
 GeoNormML and GeoNormPy are separate projects. Use an isolated Python 3.11
 environment under the resource directory configured for your machine:
 

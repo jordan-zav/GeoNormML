@@ -19,6 +19,12 @@ de los pesos finales. Véase la [decisión operativa](revisiones/adopcion_petrop
 
 ## Qué se cerró técnicamente
 
+El candidato PyPI 0.1.0 se prepara sin publicarlo. Incluye wheel y archivo fuente,
+con controles para excluir datos y pesos privados. El workflow manual prepara
+artefactos por defecto; publicar exige una etiqueta de versión y publish=true.
+Antes de subirlo falta configurar o verificar el Trusted Publisher en la cuenta
+PyPI del propietario. Véase el [procedimiento](PUBLISHING.md).
+
 - Dependencia exacta geonormpy==1.1.0 en metadata y restricciones del entorno.
 - Instalación normal sin carpeta vecina; requirements-local.txt queda para
   desarrollo con ambos checkouts editables.
