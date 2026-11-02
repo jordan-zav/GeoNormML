@@ -24,11 +24,12 @@ de hash/entorno, carga explícita de modelos de confianza, selección del contra
 de entrada, rechazos por fila y salida CSV. El ejemplo sintético se genera solo
 en una carpeta solicitada. Véase la [guía de uso](USAGE.es.md).
 
-La versión 0.1.0 se prepara y verifica antes de publicarla. Incluye wheel y archivo fuente,
-con controles para excluir datos y pesos privados. El workflow manual prepara
-artefactos por defecto; publicar exige una etiqueta de versión y publish=true.
-Antes de subirlo falta configurar o verificar el Trusted Publisher en la cuenta
-PyPI del propietario. Véase el [procedimiento](PUBLISHING.md).
+La [versión 0.1.0 está publicada en PyPI](https://pypi.org/project/geonormml/0.1.0/)
+desde el 2 de noviembre de 2026. Trusted Publishing funcionó desde v0.1.0 y los
+hashes del wheel y archivo fuente coinciden con los artefactos verificados.
+También se comprobó la instalación y el comando descargados de PyPI. No se
+incluyen datos ni pesos privados. Para futuras versiones, la publicación sigue
+siendo explícita; preparar artefactos no los sube. Véase el [procedimiento](PUBLISHING.md).
 
 - Dependencia exacta geonormpy==1.1.0 en metadata y restricciones del entorno.
 - Instalación normal sin carpeta vecina; requirements-local.txt queda para

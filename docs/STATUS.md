@@ -31,11 +31,12 @@ SHA-256/environment checks, trusted loading, declared prepared-feature or chemic
 input, per-row rejection and CSV output. A fully synthetic example is generated
 on request outside the package. See the [application guide](USAGE.md).
 
-Release 0.1.0 is prepared and verified separately from publication. Its wheel and
-source archive include public code and regression resources, with checks against
-private research files. The manual pypi.yml workflow prepares artifacts by default;
-publication requires an explicit matching tag and publish=true. PyPI Trusted
-Publisher configuration must be verified in the owner's account before upload.
+GeoNormML [0.1.0 is published on PyPI](https://pypi.org/project/geonormml/0.1.0/)
+as of 2 November 2026. Trusted Publishing succeeded from tag v0.1.0, and the
+served wheel/source hashes match the checked workflow artifacts. Installation
+and the actual console command were also checked from the PyPI download.
+The distribution excludes private research files. Later releases still require
+an explicit matching tag and publish=true; preparation defaults to no upload.
 See the [publication procedure](PUBLISHING.md).
 
 - GeoNormML declares geonormpy==1.1.0 in package metadata and constraints.

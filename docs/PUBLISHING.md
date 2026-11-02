@@ -4,6 +4,12 @@ Release version: 0.1.0. Preparing or pushing this repository does not publish a
 package to PyPI. The explicit tagged publication workflow performs the upload;
 verify its final result and the PyPI project before announcing availability.
 
+Version 0.1.0 was published successfully on 2 November 2026 through
+[run 41537980395](https://github.com/jordan-zav/GeoNormML/actions/runs/41537980395).
+The Trusted Publisher is operational. The served PyPI hashes and installed
+console workflow were verified. Preserve tag v0.1.0 and its published files;
+do not rerun its upload or move the tag. Increment the version for another release.
+
 ## What is distributed
 
 The wheel contains the reusable geonormml modules, installed CLI and package metadata. It
