@@ -44,6 +44,14 @@ siendo explícita; preparar artefactos no los sube. Véase el [procedimiento](PU
 El clasificador ficticio de las pruebas comprueba conexiones de software; no
 aporta una métrica geológica ni sustituye los modelos de investigación.
 
+También se comprobó la API instalada desde PyPI con los pesos reales v5:
+1.725 filas VOL y 976 PLU, etiquetas idénticas y diferencia cero en probabilidades
+frente a los estimadores originales, tanto con variables preparadas como con
+química de entrada. Los adaptadores y resultados permanecen privados; no hubo
+reentrenamiento. Véase la [auditoría de paridad](revisiones/installed_sdk_v5_parity_20261102.md).
+La revisión interna por clase se reconstruyó desde etiquetas OOF; no hay
+probabilidades OOF guardadas para evaluar calibración.
+
 ## Qué se conserva
 
 Los exportadores históricos y CURRENT_GENERATION mantienen curated_grouped_v2.

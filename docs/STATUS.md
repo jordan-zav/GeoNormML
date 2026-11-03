@@ -58,6 +58,14 @@ modified by these checks.
 
 ## Historical compatibility
 
+The PyPI-installed SDK also passed a real v5 parity audit on 1,725 VOL and 976
+PLU eligible rows. Prepared-feature and raw-chemistry routes preserved original
+labels and probabilities (maximum probability difference zero). Private adapters
+record the frozen contracts without refitting or changing original weights.
+See the [audit record](revisiones/installed_sdk_v5_parity_20261102.md). Saved OOF
+class reports were reconstructed; label-only OOF files cannot establish
+probability calibration. Original training Python remains unknown.
+
 CURRENT_GENERATION and the historical exporters retain curated_grouped_v2.
 generation_catalog() preserves the publication snapshot; request
 generation_catalog(include_operational=True) for the additional v5 adoption
