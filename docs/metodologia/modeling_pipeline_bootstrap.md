@@ -8,11 +8,11 @@ El dataset oficial de entrenamiento es:
 
 ## Estructura creada
 
-- [src/geonormml/config.py](/I:/GDrive/Projects/In%20Development/GeoNormML/src/geonormml/config.py)
-- [src/geonormml/data.py](/I:/GDrive/Projects/In%20Development/GeoNormML/src/geonormml/data.py)
-- [src/geonormml/features.py](/I:/GDrive/Projects/In%20Development/GeoNormML/src/geonormml/features.py)
-- [src/geonormml/split.py](/I:/GDrive/Projects/In%20Development/GeoNormML/src/geonormml/split.py)
-- [scripts/build_modeling_artifacts.py](/I:/GDrive/Projects/In%20Development/GeoNormML/scripts/build_modeling_artifacts.py)
+- [src/geonormml/config.py](../../src/geonormml/config.py)
+- [src/geonormml/data.py](../../src/geonormml/data.py)
+- [src/geonormml/features.py](../../src/geonormml/features.py)
+- [src/geonormml/split.py](../../src/geonormml/split.py)
+- [scripts/build_modeling_artifacts.py](../../scripts/build_modeling_artifacts.py)
 
 ## Qué hace
 
